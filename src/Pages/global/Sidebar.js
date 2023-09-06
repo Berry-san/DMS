@@ -21,6 +21,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   const [overlayActive, setOverlayActive] = useState(false)
   const { role, firstname, lastname } = useSelector((state) => state.user.user)
+  console.log(role)
   let date = new Date().toUTCString().slice(5, 16)
 
   useEffect(() => {
@@ -131,10 +132,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                       onClick={() => setSidebarOpen(false)}
                     />
                   ))}
-                <button className="group relative flex items-center gap-2.5 font-semibold rounded-sm py-2  text-dark_color duration-300 ease-in-out">
+                <div className="group relative flex items-center gap-2.5 font-semibold rounded-sm py-2  text-dark_color duration-300 ease-in-out">
                   <img src={logout} className="w-6 h-6" alt="" />
                   <Logout />
-                </button>
+                </div>
               </ul>
             </div>
           </nav>

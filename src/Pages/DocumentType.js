@@ -22,7 +22,6 @@ const DocumentType = () => {
   const [sortedData, setSortedData] = useState([])
   const [sortOrder, setSortOrder] = useState('asc')
   const [filteredData, setFilteredData] = useState([])
-  const [title, setTitle] = useState()
   const [tableHeader, setTableHeader] = useState()
 
   const [currentPage, setCurrentPage] = useState(1) // Track the current page
@@ -107,8 +106,8 @@ const DocumentType = () => {
 
         <div className="items-center hidden space-x-10 md:flex w-72">
           {/* <Search placeholder="Search..." /> */}
-          <div className="rounded w-full border-b border-[#4ECCA3] relative px-5 py-2 text-gray-500 focus-within:text-gray-500 bg-[#f4f4f4] focus:outline-none focus:bg-[#f4f4f4] ">
-            <span className="absolute inset-y-0 right-0 z-10 flex items-center mr-3">
+          <div className="rounded w-full border-b border-[#4ECCA3] px-5 py-2 text-gray-500 focus-within:text-gray-500 bg-[#f4f4f4] focus:outline-none focus:bg-[#f4f4f4] ">
+            {/* <span className=" inset-y-0 right-0 z-10 flex items-center mr-3">
               <button
                 type="submit"
                 className="p-1 focus:outline-none focus:shadow-outline"
@@ -125,7 +124,7 @@ const DocumentType = () => {
                   <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
               </button>
-            </span>
+            </span> */}
             <input
               type="search"
               name="search"

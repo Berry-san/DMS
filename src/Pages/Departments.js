@@ -104,7 +104,7 @@ const Departments = () => {
         </div>
         <div className="flex items-center justify-center space-x-3">
           <button
-            className="px-4 py-2 rounded bg-green"
+            className="px-4 py-2 rounded bg-green text"
             onClick={() => setShowModal(true)}
           >
             Create Department

@@ -152,7 +152,7 @@ const UnitList = () => {
                     type="submit"
                     className="px-4 py-3 mt-5 text-xs font-semibold rounded bg-green text-black_color"
                   >
-                    Create Department
+                    Create Unit
                   </button>
                 </div>
               </form>
