@@ -22,6 +22,9 @@ const UploadDocument = () => {
   const [unit, setUnit] = useState([])
   const [documentType, setDocumentType] = useState([])
   const [fetchingData, setFetchingData] = useState(false)
+  const [existingOwners, setExistingOwners] = useState(new Set())
+  const [uniqueOwners, setUniqueOwners] = useState(new Set())
+  const [suggestedOwners, setSuggestedOwners] = useState([])
 
   useEffect(() => {
     const config = {
@@ -37,21 +40,23 @@ const UploadDocument = () => {
       })
       .catch((err) => console.log(err))
 
-    // axios
-    //   .get('http://161.35.56.41/cmd_system_api/v1/api/unit', config)
-    //   .then((res) => {
-    //     setUnit(res.data.result)
-    //   })
-    //   .catch((err) => console.log(err))
-
     axios
       .get('http://161.35.56.41/cmd_system_api/v1/api/document', config)
       .then((res) => {
         setDocumentType(res.data.result)
       })
       .catch((err) => console.log(err))
+
+    axios
+      .get('http://161.35.56.41/cmd_system_api/v1/api/document_details', config)
+      .then((res) => {
+        // Assuming the response contains an array of document objects
+        res.data.result.forEach((item) => {
+          setExistingOwners((prevOwners) => prevOwners.add(item.document_owner))
+        })
+      })
+      .catch((err) => console.log(err))
   }, [])
-  // console.log(department)
 
   const handleFileChange = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -101,6 +106,28 @@ const UploadDocument = () => {
     onSubmit: async () => {
       setLoading(true)
       setError(null)
+
+      const capitalizedDocumentOwner = UploadValue.values.document_owner
+        .toLowerCase()
+        .replace(/\b\w/g, (char) => char.toUpperCase())
+
+      // Check if there are owners with the same name both in uppercase and lowercase
+      const existingOwnersArray = Array.from(existingOwners)
+      const existingOwnerIndex = existingOwnersArray.findIndex(
+        (owner) =>
+          owner.toLowerCase() === capitalizedDocumentOwner.toLowerCase()
+      )
+
+      if (existingOwnerIndex !== -1) {
+        // Use the existing owner from the list (ensure it's in the same case)
+        UploadValue.setFieldValue(
+          'document_owner',
+          existingOwnersArray[existingOwnerIndex]
+        )
+      } else {
+        // This is a new owner, add it to the list of existing owners
+        existingOwners.add(capitalizedDocumentOwner)
+      }
 
       const formData = new FormData()
 
@@ -182,6 +209,58 @@ const UploadDocument = () => {
         })
     }
   }, [UploadValue.values.department_id])
+
+  const handleDocumentOwnerChange = (e) => {
+    // const userInput = e.target.value.toLowerCase()
+    // const suggestions = Array.from(existingOwners).filter((owner) =>
+    //   owner.toLowerCase().includes(userInput)
+    // )
+    // setSuggestedOwners(suggestions)
+    // // Update your form values with the user input
+    // UploadValue.setFieldValue('document_owner', e.target.value)
+    const userInput = e.target.value.toLowerCase()
+    const suggestions = Array.from(existingOwners).filter((owner) =>
+      owner.toLowerCase().includes(userInput)
+    )
+    setSuggestedOwners(suggestions)
+    // Update your form values with the user input (capitalized)
+    UploadValue.setFieldValue('document_owner', e.target.value)
+  }
+
+  // Handle suggestion click
+  const handleSuggestionClick = (suggestion) => {
+    UploadValue.setFieldValue('document_owner', suggestion)
+    UploadValue.setFieldValue('department_id', '') // Clear the department selection
+    UploadValue.setFieldValue('unit_id', '')
+    fetchOwnerDetails(suggestion)
+    setSuggestedOwners([]) // Clear suggestions
+  }
+
+  const fetchOwnerDetails = async (ownerName) => {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'x-api-key': 987654,
+      },
+    }
+    console.log(ownerName)
+    try {
+      const response = await axios.get(
+        `http://161.35.56.41/cmd_system_api/v1/api/document_details?document_owner=${ownerName}`,
+        config
+      )
+      console.log(response.data.result)
+      const ownerDetails = response.data.result[0] // Assuming the API returns a single owner's details
+
+      // Populate other form fields with owner details
+      UploadValue.setFieldValue('phonenumber', ownerDetails.phonenumber)
+      UploadValue.setFieldValue('email', ownerDetails.email)
+      UploadValue.setFieldValue('department_id', ownerDetails.department_id)
+      UploadValue.setFieldValue('unit_id', ownerDetails.unit_id)
+    } catch (error) {
+      console.error('Error fetching owner details:', error)
+    }
+  }
 
   return (
     <>
@@ -265,13 +344,28 @@ const UploadDocument = () => {
               <label htmlFor="" className="text-xs font-semibold">
                 Document Owner
               </label>
-              <input
-                type="name"
-                name="document_owner"
-                value={UploadValue.values.document_owner}
-                onChange={UploadValue.handleChange}
-                className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  name="document_owner"
+                  value={UploadValue.values.document_owner}
+                  onChange={handleDocumentOwnerChange}
+                  className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
+                />
+                {suggestedOwners.length > 0 && (
+                  <ul className="absolute z-10 mt-2 py-2 bg-white border rounded-lg shadow-lg w-full">
+                    {suggestedOwners.map((suggestion, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                      >
+                        {suggestion}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
             <div className="col-span-2 md:col-span-1">
               <label htmlFor="" className="text-xs font-semibold">
@@ -299,16 +393,20 @@ const UploadDocument = () => {
                 value={UploadValue.values.department_id}
                 name="department_id"
                 onChange={UploadValue.handleChange}
-                className=" rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
+                className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
               >
-                <option>--</option>
+                <option value="">--</option>
                 {dept.map((dept) => (
-                  <option key={dept.department_id} value={dept.department_id}>
+                  <option
+                    key={dept.department_id}
+                    value={dept.department_id}
+                    selected={
+                      UploadValue.values.department_id === dept.department_id
+                    }
+                  >
                     {dept.department}
                   </option>
                 ))}
-                {/* <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option> */}
               </select>
             </div>
             <div className="col-span-2 md:col-span-1">
@@ -319,11 +417,15 @@ const UploadDocument = () => {
                 value={UploadValue.values.unit_id}
                 name="unit_id"
                 onChange={UploadValue.handleChange}
-                className=" rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
+                className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
               >
-                <option>--</option>
+                <option value="">--</option>
                 {unit.map((unit) => (
-                  <option key={unit.unit_id} value={unit.unit_id}>
+                  <option
+                    key={unit.unit_id}
+                    value={unit.unit_id}
+                    selected={UploadValue.values.unit_id === unit.unit_id}
+                  >
                     {unit.unit}
                   </option>
                 ))}

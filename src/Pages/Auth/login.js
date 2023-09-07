@@ -79,17 +79,6 @@ function Login() {
               created_by,
             })
           )
-          // dispatch({
-          //   type: 'SET_USER',
-          //   payload: {
-          //     email,
-          //     firstname,
-          //     lastname,
-          //     isAuthenticated: response.data['status_code'] === '0',
-          //     role: user_type_id,
-          //   },
-          // })
-          // console.log(state.isAuthenticated)
           toast.success(response.data.message)
           navigate('/layout')
         } else {
@@ -97,10 +86,10 @@ function Login() {
         }
         setLoading(false)
       } catch (error) {
+        toast.error(error.message)
         console.log(error)
         setError(error)
         setLoading(false)
-        toast.error(error)
       }
 
       console.log(loading)
