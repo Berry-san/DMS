@@ -35,7 +35,7 @@ const Documents = () => {
 
     axios
       .get(
-        'http://161.35.56.41/cmd_system_api/v1/api/document_type_list',
+        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/document_type_list',
         config
       )
       .then((res) => {
@@ -64,7 +64,7 @@ const Documents = () => {
 
     try {
       const response = await axios.post(
-        'http://161.35.56.41/cmd_system_api/v1/api/create_document',
+        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/create_document',
         qs.stringify(docForm),
         config
       )
@@ -72,7 +72,7 @@ const Documents = () => {
       if (+response.data.status_code === 0) {
         toast.success(response.data.message)
         const updatedResponse = await axios.get(
-          `http://161.35.56.41/cmd_system_api/v1/api/document_type_list`,
+          `https://connectapi.mosquepay.org/cmd_system_api/v1/api/document_type_list`,
           config
         )
         setDocType(updatedResponse.data.result)

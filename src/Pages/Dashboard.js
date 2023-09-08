@@ -23,7 +23,7 @@ const Dashboard = () => {
     // Fetch data from your API endpoint
     axios
       .get(
-        `http://161.35.56.41/cmd_system_api/v1/api/document_counts_list`,
+        `https://connectapi.mosquepay.org/cmd_system_api/v1/api/document_counts_list`,
         config
       )
       .then((res) => {
@@ -109,7 +109,7 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-12 pt-[40px]">
           <div className="flex col-span-7 rounded bg-green/50 px-5">
-            <div className="flex-none hidden md:block lg:block">
+            <div className="flex-none hidden xl:block">
               <img className="" src={file} alt="" />
             </div>
             <div className="flex-grow py-8 text-center md:py-14 lg:py-14">

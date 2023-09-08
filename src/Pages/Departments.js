@@ -34,7 +34,10 @@ const Departments = () => {
     }
 
     axios
-      .get('http://161.35.56.41/cmd_system_api/v1/api/department', config)
+      .get(
+        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/department',
+        config
+      )
       .then((res) => {
         setDepartment(res.data.result)
       })
@@ -57,7 +60,7 @@ const Departments = () => {
 
     try {
       const response = await axios.post(
-        'http://161.35.56.41/cmd_system_api/v1/api/create_department',
+        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/create_department',
         qs.stringify(deptForm),
         config
       )
@@ -65,7 +68,7 @@ const Departments = () => {
       if (+response.data.status_code === 0) {
         toast.success(response.data.message)
         const updatedResponse = await axios.get(
-          'http://161.35.56.41/cmd_system_api/v1/api/department',
+          'https://connectapi.mosquepay.org/cmd_system_api/v1/api/department',
           config
         )
         setDepartment(updatedResponse.data.result)

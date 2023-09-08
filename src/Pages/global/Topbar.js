@@ -9,7 +9,7 @@ const Topbar = (props) => {
   //   const { firstname, lastname } = state.user // Assuming your user data is stored under the "user" key in the state
   const { firstname, lastname } = useSelector((state) => state.user.user)
   return (
-    <header className="sticky top-0 z-999 flex w-full bg-white border-b border-border_color drop-shadow-1 ">
+    <header className="sticky top-0 z-30 flex w-full bg-white border-b border-border_color drop-shadow-1 ">
       <div className="flex flex-grow items-center justify-between lg:justify-end pt-3 lg:pt-7 lg:pb-6 px-4 shadow-2 md:px-6 2xl:px-11">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
           <button

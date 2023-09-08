@@ -48,7 +48,7 @@ const DocumentType = () => {
     // Fetch data from your API endpoint
     axios
       .get(
-        `http://161.35.56.41/cmd_system_api/v1/api/get_document_details_by_id?document_id=${decodedID}`,
+        `https://connectapi.mosquepay.org/cmd_system_api/v1/api/get_document_details_by_id?document_id=${decodedID}`,
         config
       )
       .then((res) => {

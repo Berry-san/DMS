@@ -37,7 +37,10 @@ const DocumentOwners = () => {
     }
 
     axios
-      .get('http://161.35.56.41/cmd_system_api/v1/api/document_count', config)
+      .get(
+        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/document_count',
+        config
+      )
       .then((res) => {
         const apiData = res.data.result
         const dataWithId = apiData.map((item, index) => ({

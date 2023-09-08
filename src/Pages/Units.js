@@ -37,7 +37,7 @@ const UnitList = () => {
 
     axios
       .get(
-        `http://161.35.56.41/cmd_system_api/v1/api/unit_list?department_id=${decodedID}`,
+        `https://connectapi.mosquepay.org/cmd_system_api/v1/api/unit_list?department_id=${decodedID}`,
         config
       )
       .then((res) => {
@@ -66,14 +66,14 @@ const UnitList = () => {
 
     try {
       const response = await axios.post(
-        'http://161.35.56.41/cmd_system_api/v1/api/create_unit',
+        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/create_unit',
         qs.stringify(unitForm),
         config
       )
       if (+response.data.status_code === 0) {
         toast.success(response.data.message)
         const updatedResponse = await axios.get(
-          `http://161.35.56.41/cmd_system_api/v1/api/unit_list?department_id=${decodedID}`,
+          `https://connectapi.mosquepay.org/cmd_system_api/v1/api/unit_list?department_id=${decodedID}`,
           config
         )
         setUnits(updatedResponse.data.result)

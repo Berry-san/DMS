@@ -21,7 +21,7 @@ const UserDocument = () => {
 
     axios
       .get(
-        `http://161.35.56.41/cmd_system_api/v1/api/document_details?document_owner=${decodedID}`,
+        `https://connectapi.mosquepay.org/cmd_system_api/v1/api/document_details?document_owner=${decodedID}`,
         config
       )
       .then((res) => {
@@ -61,7 +61,7 @@ const UserDocument = () => {
             return (
               <div className="max-w-[8rem] text-center" key={doc.id}>
                 <a
-                  href={`http://161.35.56.41/cmd_system_api/assets/img/useraccount/${doc.image}`}
+                  href={`https://connectapi.mosquepay.org/cmd_system_api/assets/img/useraccount/${doc.image}`}
                   target="_blank"
                   rel="noreferrer"
                 >

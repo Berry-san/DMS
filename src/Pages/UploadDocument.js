@@ -34,21 +34,30 @@ const UploadDocument = () => {
       },
     }
     axios
-      .get('http://161.35.56.41/cmd_system_api/v1/api/department', config)
+      .get(
+        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/department',
+        config
+      )
       .then((res) => {
         setDept(res.data.result)
       })
       .catch((err) => console.log(err))
 
     axios
-      .get('http://161.35.56.41/cmd_system_api/v1/api/document', config)
+      .get(
+        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/document',
+        config
+      )
       .then((res) => {
         setDocumentType(res.data.result)
       })
       .catch((err) => console.log(err))
 
     axios
-      .get('http://161.35.56.41/cmd_system_api/v1/api/document_details', config)
+      .get(
+        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/document_details',
+        config
+      )
       .then((res) => {
         // Assuming the response contains an array of document objects
         res.data.result.forEach((item) => {
@@ -64,18 +73,19 @@ const UploadDocument = () => {
       return
     }
 
-    const newFile = e.target.files[0] // Get the first selected file
-    if (newFile) {
-      if (newFile.size <= 2 * 1024 * 1024) {
-        // File size is within the limit (2MB)
-        setSelectedFile(newFile)
-      } else {
-        // File size exceeds the limit
-        alert('File size exceeds the 2MB limit. Please choose a smaller file.')
-        e.target.value = '' // Clear the file input
-        setSelectedFile(null)
-      }
-    }
+    const newFile = e.target.files[0]
+    setSelectedFile(newFile)
+    // if (newFile) {
+    //   if (newFile.size <= 2 * 1024 * 1024) {
+    //     // File size is within the limit (2MB)
+    //     setSelectedFile(newFile)
+    //   } else {
+    //     // File size exceeds the limit
+    //     alert('File size exceeds the 2MB limit. Please choose a smaller file.')
+    //     e.target.value = '' // Clear the file input
+    //     setSelectedFile(null)
+    //   }
+    // }
   }
 
   const handleRemoveFile = () => {
@@ -156,13 +166,15 @@ const UploadDocument = () => {
 
       try {
         const response = await axios.post(
-          'http://161.35.56.41/cmd_system_api/v1/api/user_document_creation',
+          'https://connectapi.mosquepay.org/cmd_system_api/v1/api/user_document_creation',
           formData,
           config
         )
         console.log(response)
         if (+response.data.status_code === 0) {
           toast.success(response.data.message)
+          UploadValue.resetForm()
+          setSelectedFile([])
         } else {
           toast.error(response.data.message)
         }
@@ -196,7 +208,7 @@ const UploadDocument = () => {
       }
       axios
         .get(
-          `http://161.35.56.41/cmd_system_api/v1/api/unit_list?department_id=${UploadValue.values.department_id}`,
+          `https://connectapi.mosquepay.org/cmd_system_api/v1/api/unit_list?department_id=${UploadValue.values.department_id}`,
           config
         )
         .then((res) => {
@@ -246,7 +258,7 @@ const UploadDocument = () => {
     console.log(ownerName)
     try {
       const response = await axios.get(
-        `http://161.35.56.41/cmd_system_api/v1/api/document_details?document_owner=${ownerName}`,
+        `https://connectapi.mosquepay.org/cmd_system_api/v1/api/document_details?document_owner=${ownerName}`,
         config
       )
       console.log(response.data.result)
@@ -378,11 +390,13 @@ const UploadDocument = () => {
                 className=" rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
               >
                 <option>--</option>
-                {documentType.map((doc) => (
-                  <option key={doc.document_id} value={doc.document_id}>
-                    {doc.document_type}
-                  </option>
-                ))}
+                {documentType.map((doc) => {
+                  return (
+                    <option key={doc.document_id} value={doc.document_id}>
+                      {doc.document_type}
+                    </option>
+                  )
+                })}
               </select>
             </div>
             <div className="col-span-2 md:col-span-1">
@@ -396,6 +410,9 @@ const UploadDocument = () => {
                 className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
               >
                 <option value="">--</option>
+                <option value="" selected>
+                  Test
+                </option>
                 {dept.map((dept) => (
                   <option
                     key={dept.department_id}
@@ -419,16 +436,19 @@ const UploadDocument = () => {
                 onChange={UploadValue.handleChange}
                 className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
               >
-                <option value="">--</option>
-                {unit.map((unit) => (
-                  <option
-                    key={unit.unit_id}
-                    value={unit.unit_id}
-                    selected={UploadValue.values.unit_id === unit.unit_id}
-                  >
-                    {unit.unit}
-                  </option>
-                ))}
+                <option>--</option>
+                {unit.map((unit) => {
+                  console.log(UploadValue.values.unit_id === unit.unit_id)
+                  return (
+                    <option
+                      key={unit.unit_id}
+                      value={unit.unit_id}
+                      selected={UploadValue.values.unit_id === unit.unit_id}
+                    >
+                      {unit.unit}
+                    </option>
+                  )
+                })}
               </select>
             </div>
             <div className="col-span-2 md:col-span-1">
