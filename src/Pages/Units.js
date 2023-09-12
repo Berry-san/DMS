@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import qs from 'qs'
 import { useNavigate } from 'react-router-dom'
 import back from '../assets/svgs/back.svg'
+import { API_BASE } from '../middleware/API_BASE'
 
 const UnitList = () => {
   const navigate = useNavigate()
@@ -36,10 +37,7 @@ const UnitList = () => {
     }
 
     axios
-      .get(
-        `https://connectapi.mosquepay.org/cmd_system_api/v1/api/unit_list?department_id=${decodedID}`,
-        config
-      )
+      .get(API_BASE + `unit_list?department_id=${decodedID}`, config)
       .then((res) => {
         setUnits(res.data.result)
       })
@@ -66,14 +64,14 @@ const UnitList = () => {
 
     try {
       const response = await axios.post(
-        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/create_unit',
+        API_BASE + 'create_unit',
         qs.stringify(unitForm),
         config
       )
       if (+response.data.status_code === 0) {
         toast.success(response.data.message)
         const updatedResponse = await axios.get(
-          `https://connectapi.mosquepay.org/cmd_system_api/v1/api/unit_list?department_id=${decodedID}`,
+          API_BASE + `unit_list?department_id=${decodedID}`,
           config
         )
         setUnits(updatedResponse.data.result)
@@ -91,7 +89,7 @@ const UnitList = () => {
     setShowModal(false)
     setUnits({
       unit: '',
-      document_id: '',
+      department_id: '',
       description: '',
     })
   }
@@ -109,7 +107,7 @@ const UnitList = () => {
             />
             <h3 className="flex text-lg font-bold text-left">Units</h3>
           </div>
-          <div className="flex space-x-3 justify-center items-center">
+          <div className="flex items-center justify-center">
             <button
               className="px-4 py-2 rounded bg-green"
               onClick={() => setShowModal(true)}
@@ -162,11 +160,11 @@ const UnitList = () => {
       </div>
 
       {units.length > 0 ? (
-        <ul className="mb-6 flex flex-col gap-4">
+        <ul className="flex flex-col gap-4 mb-6">
           {units.length > 0 &&
             units.map((unit) => (
               <li
-                className="group relative w-80 flex items-center justify-between gap- font-semibold rounded-sm text-dark_color duration-300 ease-in-out"
+                className="relative flex items-center justify-between font-semibold capitalize duration-300 ease-in-out rounded-sm group w-80 gap- text-dark_color"
                 key={unit.unit_id}
               >
                 {unit.unit}
@@ -174,7 +172,7 @@ const UnitList = () => {
             ))}
         </ul>
       ) : (
-        <div className="flex justify-center items-center mt-40 sm:mt-60">
+        <div className="flex items-center justify-center mt-40 sm:mt-60">
           <span className="font-semibold text-lg sm:text-[30px]">
             No Units Available
           </span>

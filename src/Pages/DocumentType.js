@@ -8,6 +8,8 @@ import { useNavigate, Link, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Pagination from '../components/Pagination/Pagination'
 import axios from 'axios'
+import { API_BASE } from '../middleware/API_BASE'
+import ShareButton from '../components/ShareButton/ShareButton'
 
 const DocumentType = () => {
   const { documentId } = useParams()
@@ -48,7 +50,7 @@ const DocumentType = () => {
     // Fetch data from your API endpoint
     axios
       .get(
-        `https://connectapi.mosquepay.org/cmd_system_api/v1/api/get_document_details_by_id?document_id=${decodedID}`,
+        API_BASE + `get_document_details_by_id?document_id=${decodedID}`,
         config
       )
       .then((res) => {
@@ -107,7 +109,7 @@ const DocumentType = () => {
         <div className="items-center hidden space-x-10 md:flex w-72">
           {/* <Search placeholder="Search..." /> */}
           <div className="rounded w-full border-b border-[#4ECCA3] px-5 py-2 text-gray-500 focus-within:text-gray-500 bg-[#f4f4f4] focus:outline-none focus:bg-[#f4f4f4] ">
-            {/* <span className=" inset-y-0 right-0 z-10 flex items-center mr-3">
+            {/* <span className="inset-y-0 right-0 z-10 flex items-center mr-3 ">
               <button
                 type="submit"
                 className="p-1 focus:outline-none focus:shadow-outline"
@@ -140,8 +142,8 @@ const DocumentType = () => {
           </Link>
         </div>
       </div>
-      <div>
-        <div className="overflow-auto border rounded border-border_color">
+      <div className="">
+        <div className="border rounded  border-border_color">
           <table className="w-full table-auto">
             <thead className="text-sm font-bold bg-green">
               <tr className="text-left bg-green">
@@ -159,6 +161,9 @@ const DocumentType = () => {
                 <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
                   Date
                 </th>
+                <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="text-sm font-medium leading-5">
@@ -169,6 +174,7 @@ const DocumentType = () => {
                 //   setTitle('')
                 // }
                 console.log(owner.document_id === decodedID)
+                const link = API_BASE + `assets/img/useraccount/${owner.image}`
                 return (
                   <tr key={owner.id}>
                     <td className="p-4 border-b border-border_color xl:pl-11">
@@ -188,6 +194,9 @@ const DocumentType = () => {
                     </td>
                     <td className="p-4 border-b border-border_color dark:border-strokedark">
                       <p className="text-black">{owner.uploaded_dt}</p>
+                    </td>
+                    <td className="z-30 p-4 border-b border-border_color dark:border-strokedark">
+                      <ShareButton link={link} icon={forward} />
                     </td>
                   </tr>
                 )

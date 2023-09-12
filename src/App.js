@@ -12,6 +12,9 @@ import Departments from './Pages/Departments'
 import UnitList from './Pages/Units'
 import Documents from './Pages/Documents'
 import DocumentType from './Pages/DocumentType'
+import Profile from './Pages/Profile'
+import Token from './Pages/Auth/token'
+import ForgotPassword from './Pages/Auth/forgotPassword'
 // import { useState, useEffect } from 'react'
 import { Route, Navigate, Routes } from 'react-router'
 import { useSelector } from 'react-redux'
@@ -29,6 +32,8 @@ function App() {
         }
       />
       <Route path="/signUp" element={<SignUp />} />
+      <Route path="/token" element={<Token />} />
+      <Route path="/forgotPassword" element={<ForgotPassword />} />
       <Route path="/layout" element={<Layout />}>
         <Route index element={<Dashboard />} />
         <Route path="createUser" element={<CreateUser />} />
@@ -40,6 +45,7 @@ function App() {
         <Route path="departments/:departmentId" element={<UnitList />} />
         <Route path="documents" element={<Documents />} />
         <Route path="documents/:documentId" element={<DocumentType />} />
+        <Route path="profile" element={<Profile />} />
 
         {/* <Route path="documents/voucher" element={<Voucher />} /> */}
       </Route>

@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Pagination from '../components/Pagination/Pagination'
 import axios from 'axios'
+import { API_BASE } from '../middleware/API_BASE'
 
 const DocumentOwners = () => {
   const navigate = useNavigate()
@@ -38,7 +39,7 @@ const DocumentOwners = () => {
 
     axios
       .get(
-        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/document_count',
+        API_BASE +'document_count',
         config
       )
       .then((res) => {
@@ -190,7 +191,7 @@ const DocumentOwners = () => {
           </div>
         </div>
       ) : (
-        <div className="flex justify-center items-center mt-40 sm:mt-60">
+        <div className="flex items-center justify-center mt-40 sm:mt-60">
           <span className="font-semibold text-lg sm:text-[30px]">
             No Document Owners Available
           </span>

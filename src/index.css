@@ -6,3 +6,38 @@ body,
 html {
   font-family: 'Raleway', sans-serif;
 }
+
+::-webkit-scrollbar-thumb {
+  background: #9c2727; /* Change this to your desired thumb color */
+}
+
+.scrollbar {
+  scroll-margin-top: 5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #393e46;
+  border-radius: 5rem;
+  scroll-padding: 1rem 1rem;
+}
+
+/* Background of the scrollbar track */
+::-webkit-scrollbar-track {
+  background: transparent; /* Change this to your desired track color */
+  padding: 1rem;
+}
+
+/* Corners of the scrollbar */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Width of the scrollbar track */
+::-webkit-scrollbar {
+  width: 6px; /* Change this to your desired track width */
+}
+
+/* Height of the scrollbar track (for horizontal scrollbars) */
+::-webkit-scrollbar:horizontal {
+  height: 8px; /* Change this to your desired track height */
+}

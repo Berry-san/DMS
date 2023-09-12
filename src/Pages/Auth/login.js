@@ -1,16 +1,17 @@
 import { Link, useNavigate } from 'react-router-dom'
 import loginLogo from '../../assets/images/loginLogo.svg'
 import { useState } from 'react'
+import { API_BASE } from '../../middleware/API_BASE'
 import axios from 'axios'
 import qs from 'qs'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useGlobalStoreContext } from '../../context/main'
 import ClipLoader from 'react-spinners/ClipLoader'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useDispatch } from 'react-redux'
 import { setUserData } from '../../redux/userSlice'
+// import forgotPassword from './ForgotPassword'
 
 function Login() {
   const navigate = useNavigate()
@@ -19,7 +20,7 @@ function Login() {
   // const { state, dispatch } = useGlobalStoreContext()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [password, setPassword] = useState('')
+  // const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
   const togglePasswordVisibility = () => {
@@ -53,7 +54,7 @@ function Login() {
 
       try {
         const response = await axios.post(
-          'https://connectapi.mosquepay.org/cmd_system_api/v1/api/user_login',
+          API_BASE + 'user_login',
           qs.stringify(loginValue.values),
           config
         )
@@ -66,9 +67,16 @@ function Login() {
               user.email.toLowerCase() === loginValue.values.email.toLowerCase()
           )
 
-          const { email, firstname, lastname, user_type_id, created_by } =
-            loginUser
+          const {
+            email,
+            firstname,
+            lastname,
+            user_type_id,
+            create_by,
+            phonenumber,
+          } = loginUser
           console.log(loginUser)
+
           dispatch(
             setUserData({
               email,
@@ -76,7 +84,8 @@ function Login() {
               lastname,
               isAuthenticated: response.data['status_code'] === '0',
               role: user_type_id,
-              created_by,
+              phonenumber,
+              create_by,
             })
           )
           toast.success(response.data.message)
@@ -136,7 +145,7 @@ function Login() {
                       onBlur={loginValue.handleBlur}
                     />
                     {loginValue.touched.email && loginValue.errors.email ? (
-                      <p className="text-red-500 font-medium text-xs mt-1">
+                      <p className="mt-1 text-xs font-medium text-red-500">
                         {loginValue.errors.email}
                       </p>
                     ) : null}
@@ -201,19 +210,24 @@ function Login() {
 
                     {loginValue.touched.password &&
                     loginValue.errors.password ? (
-                      <p className="text-red-500 font-medium text-xs mt-1">
+                      <p className="mt-1 text-xs font-medium text-red-500">
                         {loginValue.errors.password}
                       </p>
                     ) : null}
                   </div>
                 </div>
-                <button
-                  className="px-4 py-3 mt-5 text-xs font-semibold rounded bg-green text-black_color"
-                  type="submit"
-                  disabled={loading}
-                >
-                  Sign In
-                </button>
+                <div className="flex items-center justify-between">
+                  <button
+                    className="px-4 py-3 mt-5 text-xs font-semibold rounded bg-green text-black_color"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    Sign In
+                  </button>
+                  <Link to="/token" className="mt-5 text-sm font-semibold">
+                    Forgot Password ?
+                  </Link>
+                </div>
               </form>
             </div>
           </div>

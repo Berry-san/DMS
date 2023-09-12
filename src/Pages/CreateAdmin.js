@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { API_BASE } from '../middleware/API_BASE'
 import { toast } from 'react-toastify'
 import qs from 'qs'
 import { useNavigate } from 'react-router-dom'
@@ -7,6 +8,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import ClipLoader from 'react-spinners/ClipLoader'
 const CreateAdmin = () => {
   const navigate = useNavigate()
   const goBack = () => {
@@ -14,7 +16,9 @@ const CreateAdmin = () => {
   }
 
   // const { state, dispatch } = useGlobalStoreContext()
-  const { email, create_by } = useSelector((state) => state.user.user)
+  const { email, create_by, firstname, lastname, role } = useSelector(
+    (state) => state.user.user
+  )
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -42,7 +46,8 @@ const CreateAdmin = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword)
   }
-  console.log(email)
+  console.log(email, create_by, firstname, lastname, role)
+  console.log(create_by)
 
   const adminValue = useFormik({
     initialValues: {
@@ -84,7 +89,7 @@ const CreateAdmin = () => {
 
       try {
         const response = await axios.post(
-          'https://connectapi.mosquepay.org/cmd_system_api/v1/api/admin_user_creation',
+          API_BASE + 'admin_user_creation',
           qs.stringify(adminValue.values),
           config
         )
@@ -117,7 +122,7 @@ const CreateAdmin = () => {
         />
         <h3 className="flex text-lg font-bold text-left">Create Admin</h3>
       </div>
-      <form onSubmit={adminValue.handleSubmit}>
+      <form onSubmit={adminValue.handleSubmit} autoComplete="off">
         <div className="grid grid-cols-1 text-left md:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-5">
           <div>
             <label htmlFor="" className="text-xs font-semibold">
@@ -182,6 +187,7 @@ const CreateAdmin = () => {
             </label>
             <input
               type="email"
+              autoComplete="off"
               className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
               id="email"
               name="email"
@@ -220,6 +226,7 @@ const CreateAdmin = () => {
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
+                autoComplete="off"
                 className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
                 id="password"
                 name="password"
@@ -281,10 +288,19 @@ const CreateAdmin = () => {
 
         <button
           type="submit"
-          className="px-4 py-3 mt-5 text-xs font-semibold rounded bg-green text-black_color"
+          className="w-40 px-4 py-3 mt-5 text-xs font-semibold rounded bg-green text-black_color"
           disabled={loading}
         >
-          {loading ? 'loading' : 'Create Admin'}
+          {loading ? (
+            <ClipLoader
+              loading={loading}
+              size={20}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          ) : (
+            'Create Admin'
+          )}
         </button>
       </form>
     </div>

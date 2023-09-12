@@ -48,6 +48,12 @@ export const SUPERADMIN_SIDEBAR_LINKS = [
     path: 'documents',
     icon: documents,
   },
+  {
+    key: 'profile',
+    label: 'Profile',
+    path: 'profile',
+    icon: user,
+  },
 ]
 
 export const ADMIN_SIDEBAR_LINKS = [
@@ -81,6 +87,12 @@ export const ADMIN_SIDEBAR_LINKS = [
     path: 'documents',
     icon: documents,
   },
+  {
+    key: 'profile',
+    label: 'Profile',
+    path: 'profile',
+    icon: user,
+  },
 ]
 
 export const USER_SIDEBAR_LINKS = [
@@ -101,6 +113,12 @@ export const USER_SIDEBAR_LINKS = [
     label: 'Documents',
     path: 'documents',
     icon: documents,
+  },
+  {
+    key: 'profile',
+    label: 'Profile',
+    path: 'profile',
+    icon: user,
   },
 ]
 

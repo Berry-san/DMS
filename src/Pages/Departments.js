@@ -2,13 +2,13 @@
 import { useEffect, useState } from 'react'
 import right from '../assets/svgs/right.svg'
 import back from '../assets/svgs/back.svg'
-
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import Modal from '../components/Modal/Modal'
 import { toast } from 'react-toastify'
 import qs from 'qs'
 import axios from 'axios'
+import { API_BASE } from '../middleware/API_BASE'
 
 const Departments = () => {
   const [showModal, setShowModal] = useState(false)
@@ -34,10 +34,7 @@ const Departments = () => {
     }
 
     axios
-      .get(
-        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/department',
-        config
-      )
+      .get(API_BASE + 'department', config)
       .then((res) => {
         setDepartment(res.data.result)
       })
@@ -60,17 +57,14 @@ const Departments = () => {
 
     try {
       const response = await axios.post(
-        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/create_department',
+        API_BASE + 'create_department',
         qs.stringify(deptForm),
         config
       )
       console.log(response)
       if (+response.data.status_code === 0) {
         toast.success(response.data.message)
-        const updatedResponse = await axios.get(
-          'https://connectapi.mosquepay.org/cmd_system_api/v1/api/department',
-          config
-        )
+        const updatedResponse = await axios.get(API_BASE + 'department', config)
         setDepartment(updatedResponse.data.result)
       } else {
         toast.error(response.data.message)
@@ -176,7 +170,7 @@ const Departments = () => {
           })}
         </ul>
       ) : (
-        <div className="flex justify-center items-center mt-40 sm:mt-60">
+        <div className="flex items-center justify-center mt-40 sm:mt-60">
           <span className="font-semibold text-lg sm:text-[30px]">
             No Departments Available
           </span>

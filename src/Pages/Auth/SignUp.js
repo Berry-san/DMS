@@ -10,6 +10,7 @@ import axios from 'axios'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import ClipLoader from 'react-spinners/ClipLoader'
+import { API_BASE } from '../../middleware/API_BASE'
 
 const SignUp = () => {
   const navigate = useNavigate()
@@ -60,7 +61,7 @@ const SignUp = () => {
 
       try {
         const response = await axios.post(
-          'https://connectapi.mosquepay.org/cmd_system_api/v1/api/super_admin_account_creation',
+          API_BASE + 'super_admin_account_creation',
           qs.stringify(signUpValue.values),
           config
         )
@@ -125,7 +126,7 @@ const SignUp = () => {
                     />
                     {signUpValue.touched.firstname &&
                     signUpValue.errors.firstname ? (
-                      <p className="text-red-500 font-medium text-xs mt-1">
+                      <p className="mt-1 text-xs font-medium text-red-500">
                         {signUpValue.errors.firstname}
                       </p>
                     ) : null}
@@ -145,7 +146,7 @@ const SignUp = () => {
                     />
                     {signUpValue.touched.lastname &&
                     signUpValue.errors.lastname ? (
-                      <p className="text-red-500 font-medium text-xs mt-1">
+                      <p className="mt-1 text-xs font-medium text-red-500">
                         {signUpValue.errors.lastname}
                       </p>
                     ) : null}
@@ -165,7 +166,7 @@ const SignUp = () => {
                     />
                     {signUpValue.touched.phonenumber &&
                     signUpValue.errors.phonenumber ? (
-                      <p className="text-red-500 font-medium text-xs mt-1">
+                      <p className="mt-1 text-xs font-medium text-red-500">
                         {signUpValue.errors.phonenumber}
                       </p>
                     ) : null}
@@ -184,7 +185,7 @@ const SignUp = () => {
                       onBlur={signUpValue.handleBlur}
                     />
                     {signUpValue.touched.email && signUpValue.errors.email ? (
-                      <p className="text-red-500 font-medium text-xs mt-1">
+                      <p className="mt-1 text-xs font-medium text-red-500">
                         {signUpValue.errors.email}
                       </p>
                     ) : null}
@@ -247,7 +248,7 @@ const SignUp = () => {
                       </button>
                       {signUpValue.touched.password &&
                       signUpValue.errors.password ? (
-                        <p className="text-red-500 font-medium text-xs mt-1">
+                        <p className="mt-1 text-xs font-medium text-red-500">
                           {signUpValue.errors.password}
                         </p>
                       ) : null}

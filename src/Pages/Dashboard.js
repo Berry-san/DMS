@@ -7,6 +7,7 @@ import man from '../assets/svgs/man.svg'
 import rightArrow from '../assets/svgs/rightArrow.svg'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { API_BASE } from '../middleware/API_BASE'
 import { useEffect, useState } from 'react'
 
 const Dashboard = () => {
@@ -22,12 +23,8 @@ const Dashboard = () => {
     }
     // Fetch data from your API endpoint
     axios
-      .get(
-        `https://connectapi.mosquepay.org/cmd_system_api/v1/api/document_counts_list`,
-        config
-      )
+      .get(API_BASE + 'document_counts_list', config)
       .then((res) => {
-        console.log(res.data.document[0].doc_owner_count)
         setDocOwners(res.data.document_owner[0].doc_owner_count)
         setDepartments(res.data.department[0].dep_count)
         setDocuments(res.data.document[0].doc_count)
@@ -108,7 +105,7 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 pt-[40px]">
-          <div className="flex col-span-7 rounded bg-green/50 px-5">
+          <div className="flex col-span-7 px-5 rounded bg-green/50">
             <div className="flex-none hidden xl:block">
               <img className="" src={file} alt="" />
             </div>

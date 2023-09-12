@@ -9,6 +9,7 @@ import axios from 'axios'
 import Modal from '../components/Modal/Modal'
 import { ToastContainer, toast } from 'react-toastify'
 import qs from 'qs'
+import { API_BASE } from '../middleware/API_BASE'
 
 const Documents = () => {
   const navigate = useNavigate()
@@ -34,10 +35,7 @@ const Documents = () => {
     }
 
     axios
-      .get(
-        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/document_type_list',
-        config
-      )
+      .get(API_BASE + 'document_type_list', config)
       .then((res) => {
         setDocType(res.data.result)
       })
@@ -64,7 +62,7 @@ const Documents = () => {
 
     try {
       const response = await axios.post(
-        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/create_document',
+        API_BASE + 'create_document',
         qs.stringify(docForm),
         config
       )
@@ -72,7 +70,7 @@ const Documents = () => {
       if (+response.data.status_code === 0) {
         toast.success(response.data.message)
         const updatedResponse = await axios.get(
-          `https://connectapi.mosquepay.org/cmd_system_api/v1/api/document_type_list`,
+          API_BASE + `document_type_list`,
           config
         )
         setDocType(updatedResponse.data.result)
@@ -180,7 +178,7 @@ const Documents = () => {
           </div>
         </div>
       ) : (
-        <div className="flex justify-center items-center mt-40 sm:mt-60">
+        <div className="flex items-center justify-center mt-40 sm:mt-60">
           <span className="font-semibold text-lg sm:text-[30px]">
             No Documents Type Available
           </span>

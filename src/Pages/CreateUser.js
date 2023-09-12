@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { API_BASE } from '../middleware/API_BASE'
 import { toast } from 'react-toastify'
 import qs from 'qs'
 import { useNavigate } from 'react-router'
 import back from '../assets/svgs/back.svg'
 import { useState, useEffect } from 'react'
-import { useGlobalStoreContext } from '../context/main'
+import ClipLoader from 'react-spinners/ClipLoader'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useSelector } from 'react-redux'
@@ -35,10 +36,7 @@ const CreateUser = () => {
       },
     }
     axios
-      .get(
-        'https://connectapi.mosquepay.org/cmd_system_api/v1/api/department',
-        config
-      )
+      .get(API_BASE + 'department', config)
       .then((res) => {
         setDept(res.data.result)
       })
@@ -83,10 +81,11 @@ const CreateUser = () => {
           'x-api-key': 987654,
         },
       }
+      console.log(create_by)
 
       try {
         const response = await axios.post(
-          'https://connectapi.mosquepay.org/cmd_system_api/v1/api/user_creation',
+          API_BASE + 'user_creation',
           qs.stringify(userValue.values),
           config
         )
@@ -119,7 +118,8 @@ const CreateUser = () => {
       }
       axios
         .get(
-          `https://connectapi.mosquepay.org/cmd_system_api/v1/api/unit_list?department_id=${userValue.values.department_id}`,
+          API_BASE +
+            `unit_list?department_id=${userValue.values.department_id}`,
           config
         )
         .then((res) => {
@@ -144,7 +144,7 @@ const CreateUser = () => {
         />
         <h3 className="flex text-lg font-bold text-left">Create User</h3>
       </div>
-      <form onSubmit={userValue.handleSubmit}>
+      <form onSubmit={userValue.handleSubmit} autoComplete="off">
         <div className="grid grid-cols-1 text-left md:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-5">
           <div>
             <label htmlFor="" className="text-xs font-semibold">
@@ -330,10 +330,19 @@ const CreateUser = () => {
 
         <button
           type="submit"
-          className="px-4 py-3 mt-5 text-xs font-semibold rounded bg-green text-black_color"
+          className="w-40 px-4 py-3 mt-5 text-xs font-semibold rounded bg-green text-black_color"
           disabled={loading}
         >
-          {loading ? 'loading' : 'Create User'}
+          {loading ? (
+            <ClipLoader
+              loading={loading}
+              size={20}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          ) : (
+            'Create User'
+          )}
         </button>
       </form>
     </div>

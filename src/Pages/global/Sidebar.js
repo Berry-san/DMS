@@ -8,6 +8,7 @@ import { SUPERADMIN_SIDEBAR_LINKS } from '../lib/constants/navigation'
 import { ADMIN_SIDEBAR_LINKS } from '../lib/constants/navigation'
 import { USER_SIDEBAR_LINKS } from '../lib/constants/navigation'
 import Logout from '../Auth/Logout'
+import Clock from '../../components/Clock/Clock'
 import { useSelector } from 'react-redux'
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
@@ -79,7 +80,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     content = USER_SIDEBAR_LINKS
   }
   return (
-    <div className="relative">
+    <div className="relative scrollbar ">
       {overlayActive && window.innerWidth <= 1024 && (
         <div
           onClick={() => setSidebarOpen(false)}
@@ -88,7 +89,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       )}
       <aside
         ref={sidebar}
-        className={`absolute left-0 top-0 z-40 flex h-screen w-80 flex-col overflow-y-hidden bg-green px-2 duration-300 ease-linear  lg:static lg:translate-x-0 ${
+        className={`absolute left-0 top-0 z-40 scrollbar-none flex h-screen w-80 flex-col overflow-y-hidden bg-green px-2 duration-300 ease-linear  lg:static lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -115,7 +116,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         </div>
         {/* SIDEBAR HEADER */}
 
-        <div className="flex flex-col flex-1 overflow-y-auto duration-300 ease-linear no-scrollbar">
+        <div className="flex flex-col flex-1 overflow-y-auto duration-300 ease-linear ">
           {/* Sidebar Menu */}
           <nav className="px-4 py-6 mt-5 border-b border-dashed lg:mt-5 lg:pb-10 lg:px-6 border-black_color">
             {/* Menu Group */}
@@ -149,7 +150,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <p className="text-sm font-semibold tracking-[0.7px]">
                 {firstname} {lastname}
               </p>
-              <p className="text-sm font-medium text-black_color">{date}</p>
+              <Clock />
+              {/* <p className="text-sm font-medium text-black_color">{date}</p> */}
             </div>
           </div>
         </div>
