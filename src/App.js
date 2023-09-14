@@ -3,6 +3,7 @@ import Login from './Pages/Auth/login'
 import SignUp from './Pages/Auth/SignUp'
 import Layout from './Pages/global/Layout'
 import Dashboard from './Pages/Dashboard'
+import CreateSuperAdmin from './Pages/CreateSuperAdmin'
 import CreateUser from './Pages/CreateUser'
 import CreateAdmin from './Pages/CreateAdmin'
 import DocumentOwners from './Pages/DocumentOwners'
@@ -36,6 +37,7 @@ function App() {
       <Route path="/forgotPassword" element={<ForgotPassword />} />
       <Route path="/layout" element={<Layout />}>
         <Route index element={<Dashboard />} />
+        <Route path="createSuperAdmin" element={<CreateSuperAdmin />} />
         <Route path="createUser" element={<CreateUser />} />
         <Route path="createAdmin" element={<CreateAdmin />} />
         <Route path="documentOwners" element={<DocumentOwners />} />

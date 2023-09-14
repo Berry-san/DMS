@@ -27,7 +27,6 @@ const DocumentOwners = () => {
   const indexOfLastUser = currentPage * usersPerPage
   const indexOfFirstUser = indexOfLastUser - usersPerPage
   const currentUsers = filteredData?.slice(indexOfFirstUser, indexOfLastUser)
-  console.log(currentUsers)
 
   useEffect(() => {
     const config = {
@@ -38,10 +37,7 @@ const DocumentOwners = () => {
     }
 
     axios
-      .get(
-        API_BASE +'document_count',
-        config
-      )
+      .get(API_BASE + 'document_count', config)
       .then((res) => {
         const apiData = res.data.result
         const dataWithId = apiData.map((item, index) => ({
@@ -50,11 +46,9 @@ const DocumentOwners = () => {
         }))
         setFilteredData(dataWithId)
         setSortedData(dataWithId)
-        console.log(dataWithId)
       })
       .catch((err) => console.log(err))
   }, [])
-  console.log(filteredData)
 
   const handleSearchChange = (e) => {
     const searchValue = e.target.value.toLowerCase()
@@ -80,7 +74,6 @@ const DocumentOwners = () => {
     setFilteredData(sorted)
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
   }
-  console.log(currentUsers)
 
   return (
     <>
@@ -141,7 +134,7 @@ const DocumentOwners = () => {
                     Owner
                   </th>
                   <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
-                    Department Count
+                    Document Count
                   </th>
                   <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
                     Department

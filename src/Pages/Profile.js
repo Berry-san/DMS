@@ -19,15 +19,8 @@ const Profile = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const {
-    firstname,
-    lastname,
-    email,
-    create_by,
-    phonenumber,
-    department,
-    unit,
-  } = useSelector((state) => state.user.user)
+  const { firstname, lastname, email, phonenumber, department, unit } =
+    useSelector((state) => state.user.user)
 
   const passwordValue = useFormik({
     initialValues: {
@@ -63,7 +56,6 @@ const Profile = () => {
           qs.stringify(passwordValue.values),
           config
         )
-        console.log(response.data)
         if (response.data['status_code'] === '0') {
           toast.success(response.data.message)
         } else {
@@ -76,8 +68,6 @@ const Profile = () => {
         setError(error)
         setLoading(false)
       }
-
-      console.log(loading)
     },
   })
   return (

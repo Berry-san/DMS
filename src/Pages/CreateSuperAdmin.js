@@ -2,57 +2,61 @@ import axios from 'axios'
 import { API_BASE } from '../middleware/API_BASE'
 import { toast } from 'react-toastify'
 import qs from 'qs'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import back from '../assets/svgs/back.svg'
 import { useState, useEffect } from 'react'
-import ClipLoader from 'react-spinners/ClipLoader'
+import { useSelector } from 'react-redux'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { useSelector } from 'react-redux'
-const CreateUser = () => {
+import ClipLoader from 'react-spinners/ClipLoader'
+const CreateSuperAdmin = () => {
   const navigate = useNavigate()
   const goBack = () => {
     navigate(-1)
   }
 
-  const { email, create_by } = useSelector((state) => state.user.user)
+  // const { state, dispatch } = useGlobalStoreContext()
+  const { email, create_by, firstname, lastname, role } = useSelector(
+    (state) => state.user.user
+  )
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [dept, setDept] = useState([])
-  const [unit, setUnit] = useState([])
-  const [fetchingData, setFetchingData] = useState(false)
+  //   const [dept, setDept] = useState([])
   const [showPassword, setShowPassword] = useState(false)
+
+  //   useEffect(() => {
+  //     const config = {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //         'x-api-key': 987654,
+  //       },
+  //     }
+  //     axios
+  //       .get(
+  //         'https://connectapi.mosquepay.org/cmd_system_api/v1/api/department',
+  //         config
+  //       )
+  //       .then((res) => {
+  //         setDept(res.data.result)
+  //       })
+  //       .catch((err) => console.log(err))
+  //   }, [])
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword)
   }
+  console.log(email, create_by, firstname, lastname, role)
+  console.log(create_by)
 
-  useEffect(() => {
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'x-api-key': 987654,
-      },
-    }
-    axios
-      .get(API_BASE + 'department', config)
-      .then((res) => {
-        setDept(res.data.result)
-      })
-      .catch((err) => console.log(err))
-  }, [])
-
-  const userValue = useFormik({
+  const adminValue = useFormik({
     initialValues: {
       firstname: '',
       lastname: '',
       email: '',
       phonenumber: '',
       password: '',
-      department_id: '',
-      unit: '',
-      user_type_id: 3,
+      user_type_id: 1,
       create_by: create_by,
     },
     validationSchema: Yup.object({
@@ -81,18 +85,17 @@ const CreateUser = () => {
           'x-api-key': 987654,
         },
       }
-      console.log(userValue.values)
 
       try {
         const response = await axios.post(
-          API_BASE + 'user_creation',
-          qs.stringify(userValue.values),
+          API_BASE + 'super_admin_account_creation',
+          qs.stringify(adminValue.values),
           config
         )
         console.log(response)
         if (+response.data.status_code === 0) {
           toast.success(response.data.message)
-          userValue.resetForm()
+          adminValue.resetForm()
         } else {
           toast.error(response.data.message)
         }
@@ -107,32 +110,6 @@ const CreateUser = () => {
     },
   })
 
-  useEffect(() => {
-    // Fetch options for the second field based on selectedValue1
-    if (userValue.values.department_id) {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'x-api-key': 987654,
-        },
-      }
-      axios
-        .get(
-          API_BASE +
-            `unit_list?department_id=${userValue.values.department_id}`,
-          config
-        )
-        .then((res) => {
-          setUnit(res.data.result)
-          setFetchingData(false)
-        })
-        .catch((err) => {
-          console.log(err)
-          setFetchingData(false)
-        })
-    }
-  }, [userValue.values.department_id])
-
   return (
     <div className="text-left">
       <div className="flex items-center mb-5 space-x-5">
@@ -142,9 +119,9 @@ const CreateUser = () => {
           alt=""
           onClick={goBack}
         />
-        <h3 className="flex text-lg font-bold text-left">Create User</h3>
+        <h3 className="flex text-lg font-bold text-left">Create Super Admin</h3>
       </div>
-      <form onSubmit={userValue.handleSubmit} autoComplete="off">
+      <form onSubmit={adminValue.handleSubmit} autoComplete="off">
         <div className="grid grid-cols-1 text-left md:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-5">
           <div>
             <label htmlFor="" className="text-xs font-semibold">
@@ -155,13 +132,13 @@ const CreateUser = () => {
               className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
               id="firstname"
               name="firstname"
-              value={userValue.values.firstname}
-              onChange={userValue.handleChange}
-              onBlur={userValue.handleBlur}
+              value={adminValue.values.firstname}
+              onChange={adminValue.handleChange}
+              onBlur={adminValue.handleBlur}
             />
-            {userValue.touched.firstname && userValue.errors.firstname ? (
+            {adminValue.touched.firstname && adminValue.errors.firstname ? (
               <p className="mt-1 text-xs font-medium text-red-500">
-                {userValue.errors.firstname}
+                {adminValue.errors.firstname}
               </p>
             ) : null}
           </div>
@@ -174,13 +151,13 @@ const CreateUser = () => {
               className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
               id="lastname"
               name="lastname"
-              value={userValue.values.lastname}
-              onChange={userValue.handleChange}
-              onBlur={userValue.handleBlur}
+              value={adminValue.values.lastname}
+              onChange={adminValue.handleChange}
+              onBlur={adminValue.handleBlur}
             />
-            {userValue.touched.lastname && userValue.errors.lastname ? (
+            {adminValue.touched.lastname && adminValue.errors.lastname ? (
               <p className="mt-1 text-xs font-medium text-red-500">
-                {userValue.errors.lastname}
+                {adminValue.errors.lastname}
               </p>
             ) : null}
           </div>
@@ -193,13 +170,13 @@ const CreateUser = () => {
               className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
               id="phonenumber"
               name="phonenumber"
-              value={userValue.values.phonenumber}
-              onChange={userValue.handleChange}
-              onBlur={userValue.handleBlur}
+              value={adminValue.values.phonenumber}
+              onChange={adminValue.handleChange}
+              onBlur={adminValue.handleBlur}
             />
-            {userValue.touched.phonenumber && userValue.errors.phonenumber ? (
+            {adminValue.touched.phonenumber && adminValue.errors.phonenumber ? (
               <p className="mt-1 text-xs font-medium text-red-500">
-                {userValue.errors.phonenumber}
+                {adminValue.errors.phonenumber}
               </p>
             ) : null}
           </div>
@@ -209,27 +186,28 @@ const CreateUser = () => {
             </label>
             <input
               type="email"
+              autoComplete="off"
               className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
               id="email"
               name="email"
-              value={userValue.values.email}
-              onChange={userValue.handleChange}
-              onBlur={userValue.handleBlur}
+              value={adminValue.values.email}
+              onChange={adminValue.handleChange}
+              onBlur={adminValue.handleBlur}
             />
-            {userValue.touched.email && userValue.errors.email ? (
+            {adminValue.touched.email && adminValue.errors.email ? (
               <p className="mt-1 text-xs font-medium text-red-500">
-                {userValue.errors.email}
+                {adminValue.errors.email}
               </p>
             ) : null}
           </div>
-          <div className="col-span-2 md:col-span-1">
+          {/* <div className="col-span-2 md:col-span-1">
             <label htmlFor="" className="text-xs font-semibold">
               Department
             </label>
             <select
-              value={userValue.values.department_id}
+              value={adminValue.values.department_id}
               name="department_id"
-              onChange={userValue.handleChange}
+              onChange={adminValue.handleChange}
               className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
             >
               <option value="">--</option>
@@ -239,28 +217,7 @@ const CreateUser = () => {
                 </option>
               ))}
             </select>
-          </div>
-          <div className="col-span-2 md:col-span-1">
-            <label htmlFor="" className="text-xs font-semibold">
-              Unit
-            </label>
-            <select
-              value={userValue.values.unit}
-              name="unit"
-              onChange={userValue.handleChange}
-              className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
-            >
-              <option>--</option>
-              {unit.map((unit) => {
-                // console.log(userValue.values.unit_id === unit.unit_id)
-                return (
-                  <option key={unit.unit_id} value={unit.unit_id}>
-                    {unit.unit}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
+          </div> */}
           <div>
             <label htmlFor="" className="text-xs font-semibold">
               Password:
@@ -268,12 +225,13 @@ const CreateUser = () => {
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
+                autoComplete="off"
                 className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
                 id="password"
                 name="password"
-                value={userValue.values.password}
-                onChange={userValue.handleChange}
-                onBlur={userValue.handleBlur}
+                value={adminValue.values.password}
+                onChange={adminValue.handleChange}
+                onBlur={adminValue.handleBlur}
               />
               <button
                 type="button"
@@ -319,9 +277,9 @@ const CreateUser = () => {
               </button>
             </div>
 
-            {userValue.touched.password && userValue.errors.password ? (
+            {adminValue.touched.password && adminValue.errors.password ? (
               <p className="mt-1 text-xs font-medium text-red-500">
-                {userValue.errors.password}
+                {adminValue.errors.password}
               </p>
             ) : null}
           </div>
@@ -340,7 +298,7 @@ const CreateUser = () => {
               data-testid="loader"
             />
           ) : (
-            'Create User'
+            'Create Super Admin'
           )}
         </button>
       </form>
@@ -348,4 +306,4 @@ const CreateUser = () => {
   )
 }
 
-export default CreateUser
+export default CreateSuperAdmin

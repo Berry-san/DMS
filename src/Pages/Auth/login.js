@@ -72,7 +72,7 @@ function Login() {
             firstname,
             lastname,
             user_type_id,
-            create_by,
+            ref_id,
             phonenumber,
           } = loginUser
           console.log(loginUser)
@@ -85,7 +85,7 @@ function Login() {
               isAuthenticated: response.data['status_code'] === '0',
               role: user_type_id,
               phonenumber,
-              create_by,
+              create_by: ref_id,
             })
           )
           toast.success(response.data.message)
@@ -122,11 +122,11 @@ function Login() {
           <div className="px-10 py-6">
             <div className="flex items-center justify-between mb-5 ">
               <h4 className="text-sm font-semibold">Sign In</h4>
-              <Link to="/signUp">
+              {/* <Link to="/signUp">
                 <span className="text-xs font-semibold text-black_color">
                   User registration
                 </span>
-              </Link>
+              </Link> */}
             </div>
             <div>
               <form onSubmit={loginValue.handleSubmit}>

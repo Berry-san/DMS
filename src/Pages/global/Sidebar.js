@@ -4,6 +4,7 @@ import leftArrow from '../../assets/svgs/leftArrow.svg'
 import logout from '../../assets/svgs/logout.svg'
 import { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { SUPER_SUPER_ADMIN_SIDEBAR_LINKS } from '../lib/constants/navigation'
 import { SUPERADMIN_SIDEBAR_LINKS } from '../lib/constants/navigation'
 import { ADMIN_SIDEBAR_LINKS } from '../lib/constants/navigation'
 import { USER_SIDEBAR_LINKS } from '../lib/constants/navigation'
@@ -22,8 +23,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   const [overlayActive, setOverlayActive] = useState(false)
   const { role, firstname, lastname } = useSelector((state) => state.user.user)
-  console.log(role)
-  let date = new Date().toUTCString().slice(5, 16)
+  // let date = new Date().toUTCString().slice(5, 16)
 
   useEffect(() => {
     const clickHandler = ({ target }) => {
@@ -78,6 +78,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     content = ADMIN_SIDEBAR_LINKS
   } else if (+role === 3) {
     content = USER_SIDEBAR_LINKS
+  } else if (+role === 4) {
+    content = SUPER_SUPER_ADMIN_SIDEBAR_LINKS
   }
   return (
     <div className="relative scrollbar ">

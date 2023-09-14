@@ -15,6 +15,8 @@ const DropdownUser = () => {
     content = 'ADMIN'
   } else if (+role === 3) {
     content = 'USER'
+  } else {
+    content = 'SUPER SUPER ADMIN'
   }
 
   const trigger = useRef(null)

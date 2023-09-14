@@ -46,8 +46,6 @@ const CreateAdmin = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword)
   }
-  console.log(email, create_by, firstname, lastname, role)
-  console.log(create_by)
 
   const adminValue = useFormik({
     initialValues: {
@@ -201,7 +199,7 @@ const CreateAdmin = () => {
               </p>
             ) : null}
           </div>
-          {/* <div className="col-span-2 md:col-span-1">
+          <div className="col-span-2 md:col-span-1">
             <label htmlFor="" className="text-xs font-semibold">
               Department
             </label>
@@ -218,7 +216,7 @@ const CreateAdmin = () => {
                 </option>
               ))}
             </select>
-          </div> */}
+          </div>
           <div>
             <label htmlFor="" className="text-xs font-semibold">
               Password:

@@ -31,6 +31,7 @@ const UploadDocument = () => {
   const [suggestedOwners, setSuggestedOwners] = useState([])
   const [suggestedUnits, setSuggestedUnits] = useState([])
   const [selectedUnitName, setSelectedUnitName] = useState('')
+  const [selectedUnitId, setSelectedUnitId] = useState('')
   const [isOwnerDropdownOpen, setIsOwnerDropdownOpen] = useState(false)
   const [isUnitDropdownOpen, setIsUnitDropdownOpen] = useState(false)
 
@@ -41,49 +42,49 @@ const UploadDocument = () => {
     },
   }
 
-  useEffect(() => {
-    // Event listener for clicks outside the Document Owner input
-    const handleOwnerClickOutside = (e) => {
-      if (
-        isOwnerDropdownOpen &&
-        ownerInputRef.current &&
-        !ownerInputRef.current.contains(e.target)
-      ) {
-        setIsOwnerDropdownOpen(false)
-      }
-    }
+  // useEffect(() => {
+  //   // Event listener for clicks outside the Document Owner input
+  //   const handleOwnerClickOutside = (e) => {
+  //     if (
+  //       isOwnerDropdownOpen &&
+  //       ownerInputRef.current &&
+  //       !ownerInputRef.current.contains(e.target)
+  //     ) {
+  //       setIsOwnerDropdownOpen(false)
+  //     }
+  //   }
 
-    // Event listener for clicks outside the Select Unit input
-    const handleUnitClickOutside = (e) => {
-      if (
-        isUnitDropdownOpen &&
-        unitInputRef.current &&
-        !unitInputRef.current.contains(e.target)
-      ) {
-        setIsUnitDropdownOpen(false)
-      }
-    }
+  //   // Event listener for clicks outside the Select Unit input
+  //   const handleUnitClickOutside = (e) => {
+  //     if (
+  //       isUnitDropdownOpen &&
+  //       unitInputRef.current &&
+  //       !unitInputRef.current.contains(e.target)
+  //     ) {
+  //       setIsUnitDropdownOpen(false)
+  //     }
+  //   }
 
-    // Event listener for the "Esc" key to close both dropdowns
-    const handleEscKey = (e) => {
-      if (e.key === 'Escape') {
-        setIsOwnerDropdownOpen(false)
-        setIsUnitDropdownOpen(false)
-      }
-    }
+  //   // Event listener for the "Esc" key to close both dropdowns
+  //   const handleEscKey = (e) => {
+  //     if (e.key === 'Escape') {
+  //       setIsOwnerDropdownOpen(false)
+  //       setIsUnitDropdownOpen(false)
+  //     }
+  //   }
 
-    // Add event listeners
-    document.addEventListener('mousedown', handleOwnerClickOutside)
-    document.addEventListener('mousedown', handleUnitClickOutside)
-    document.addEventListener('keydown', handleEscKey)
+  //   // Add event listeners
+  //   document.addEventListener('mousedown', handleOwnerClickOutside)
+  //   document.addEventListener('mousedown', handleUnitClickOutside)
+  //   document.addEventListener('keydown', handleEscKey)
 
-    // Remove event listeners on component unmount
-    return () => {
-      document.removeEventListener('mousedown', handleOwnerClickOutside)
-      document.removeEventListener('mousedown', handleUnitClickOutside)
-      document.removeEventListener('keydown', handleEscKey)
-    }
-  }, [isOwnerDropdownOpen, isUnitDropdownOpen])
+  //   // Remove event listeners on component unmount
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleOwnerClickOutside)
+  //     document.removeEventListener('mousedown', handleUnitClickOutside)
+  //     document.removeEventListener('keydown', handleEscKey)
+  //   }
+  // }, [isOwnerDropdownOpen, isUnitDropdownOpen])
 
   useEffect(() => {
     const config = {
@@ -365,6 +366,7 @@ const UploadDocument = () => {
     // Update the input field with the selected unit name (for display)
     setSelectedUnitName(unitSuggestion.unit)
     console.log(unitSuggestion)
+    setSelectedUnitId(unitSuggestion.unit_id)
     // Update the form field with the selected unit_id
     UploadValue.setFieldValue('unit_id', unitSuggestion.unit_id)
     // Clear the suggestions
@@ -554,7 +556,7 @@ const UploadDocument = () => {
               <label htmlFor="" className="text-xs font-semibold">
                 Select Unit
               </label>
-              {/* <select
+              <select
                 value={UploadValue.values.unit_id}
                 name="unit_id"
                 onChange={UploadValue.handleChange}
@@ -573,8 +575,8 @@ const UploadDocument = () => {
                     </option>
                   )
                 })}
-              </select> */}
-              <input
+              </select>
+              {/* <input
                 type="text"
                 name="unit_id"
                 value={selectedUnitName} // Display the selected unit name
@@ -583,9 +585,9 @@ const UploadDocument = () => {
                 onFocus={() => setIsUnitDropdownOpen(true)} // Open the dropdown on focus
                 onBlur={() => setIsUnitDropdownOpen(false)}
                 className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
-              />
+              /> */}
               {/* {suggestedUnits.length > 0 && isUnitDropdownOpen && ( */}
-              {suggestedUnits.length > 0 && (
+              {/* {suggestedUnits.length > 0 && (
                 <ul className="absolute z-10 w-full py-2 mt-2 bg-white border rounded-lg shadow-lg max-h-[8rem] overflow-auto scrollbar-thin scrollbar-thumb-black">
                   {suggestedUnits.map((unitSuggestion, index) => {
                     // console.log(unitSuggestion.unit)
@@ -602,7 +604,7 @@ const UploadDocument = () => {
                     )
                   })}
                 </ul>
-              )}
+              )} */}
             </div>
             <div className="col-span-2 md:col-span-1">
               <label htmlFor="" className="text-xs font-semibold">

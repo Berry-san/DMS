@@ -5,12 +5,24 @@ import documents from '../../../assets/svgs/documents.svg'
 import departments from '../../../assets/svgs/departments.svg'
 import dashboard from '../../../assets/svgs/dashboard.svg'
 
-export const SUPERADMIN_SIDEBAR_LINKS = [
+export const SUPER_SUPER_ADMIN_SIDEBAR_LINKS = [
   {
     key: 'dashboard',
     label: 'Dashboard',
     path: './',
     icon: dashboard,
+  },
+  {
+    key: 'createSuperAdmin',
+    label: 'Create Super Admin',
+    path: 'createSuperAdmin',
+    icon: user,
+  },
+  {
+    key: 'createAdmin',
+    label: 'Create Admin',
+    path: 'createAdmin',
+    icon: user,
   },
   {
     key: 'createUser',
@@ -19,9 +31,54 @@ export const SUPERADMIN_SIDEBAR_LINKS = [
     icon: user,
   },
   {
+    key: 'uploadDocument',
+    label: 'Upload Document',
+    path: 'uploadDocument',
+    icon: upload,
+  },
+  {
+    key: 'documentOwners',
+    label: 'Document Owners',
+    path: 'documentOwners',
+    icon: users,
+  },
+  {
+    key: 'departments',
+    label: 'Departments',
+    path: 'departments',
+    icon: departments,
+  },
+  {
+    key: 'documents',
+    label: 'Documents',
+    path: 'documents',
+    icon: documents,
+  },
+  {
+    key: 'profile',
+    label: 'Profile',
+    path: 'profile',
+    icon: user,
+  },
+]
+
+export const SUPERADMIN_SIDEBAR_LINKS = [
+  {
+    key: 'dashboard',
+    label: 'Dashboard',
+    path: './',
+    icon: dashboard,
+  },
+  {
     key: 'createAdmin',
     label: 'Create Admin',
     path: 'createAdmin',
+    icon: user,
+  },
+  {
+    key: 'createUser',
+    label: 'Create User',
+    path: 'createUser',
     icon: user,
   },
   {

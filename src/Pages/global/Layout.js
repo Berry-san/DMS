@@ -12,8 +12,6 @@ const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { isAuthenticated } = useSelector((state) => state.user.user)
 
-  console.log(isAuthenticated)
-
   useEffect(() => {
     if (!isAuthenticated) navigate('/login')
   }, [isAuthenticated, navigate])

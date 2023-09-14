@@ -93,6 +93,7 @@ const UserDocument = () => {
                 </div>
                 <a
                   className="items-center justify-center mt-5"
+                  download={true}
                   href={link}
                   target="_blank"
                   rel="noreferrer"
