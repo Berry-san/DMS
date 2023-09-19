@@ -74,6 +74,8 @@ function Login() {
             user_type_id,
             ref_id,
             phonenumber,
+            department,
+            unit,
           } = loginUser
           console.log(loginUser)
 
@@ -86,6 +88,8 @@ function Login() {
               role: user_type_id,
               phonenumber,
               create_by: ref_id,
+              department,
+              unit,
             })
           )
           toast.success(response.data.message)

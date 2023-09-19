@@ -23,39 +23,41 @@ function Token() {
   const changePasswordValue = useFormik({
     initialValues: {
       email: '',
+      user_type_id: '',
     },
     onSubmit: async () => {
       setLoading(true)
       setError(null)
-      setSuccess(true)
+      console.log(changePasswordValue.values)
+      // setSuccess(true)
 
-      // const config = {
-      //   headers: {
-      //     'Content-Type': 'application/x-www-form-urlencoded',
-      //     'x-api-key': 987654,
-      //   },
-      // }
+      const config = {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-api-key': 987654,
+        },
+      }
 
-      // try {
-      //   const response = await axios.post(
-      //     API_BASE + 'user_login',
-      //     qs.stringify(changePasswordValue.values),
-      //     config
-      //   )
-      //   console.log(response.data)
-      //   if (response.data['status_code'] === '0') {
-      //     toast.success(response.data.message)
-      //     setSuccess(true)
-      //   } else {
-      //     toast.error(response.data.message)
-      //   }
-      //   setLoading(false)
-      // } catch (error) {
-      //   toast.error(error.message)
-      //   console.log(error)
-      //   setError(error)
-      //   setLoading(false)
-      // }
+      try {
+        const response = await axios.post(
+          API_BASE + 'generate_token',
+          qs.stringify(changePasswordValue.values),
+          config
+        )
+        console.log(response.data)
+        if (response.data['status_code'] === '0') {
+          toast.success(response.data.message)
+          setSuccess(true)
+        } else {
+          toast.error(response.data.message)
+        }
+        setLoading(false)
+      } catch (error) {
+        toast.error(error.message)
+        console.log(error)
+        setError(error)
+        setLoading(false)
+      }
     },
   })
 
@@ -102,6 +104,23 @@ function Token() {
                         {changePasswordValue.errors.email}
                       </p>
                     ) : null}
+                  </div>
+                  <div className="col-span-2 md:col-span-1">
+                    <label htmlFor="" className="text-xs font-semibold">
+                      Select User Type
+                    </label>
+                    <select
+                      value={changePasswordValue.values.department_id}
+                      name="user_type_id"
+                      onChange={changePasswordValue.handleChange}
+                      className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
+                    >
+                      <option value="">--</option>
+                      <option value="4">Super Super Admin</option>
+                      <option value="1">Super Admin</option>
+                      <option value="2">Admin</option>
+                      <option value="3">User</option>
+                    </select>
                   </div>
                 </div>
                 <div className="flex items-center justify-center">

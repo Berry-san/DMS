@@ -5,7 +5,9 @@ import profile from '../../assets/svgs/profile.svg'
 import { useSelector } from 'react-redux'
 
 const DropdownUser = () => {
-  const { firstname, lastname, role } = useSelector((state) => state.user.user)
+  const { firstname, lastname, role, department } = useSelector(
+    (state) => state.user.user
+  )
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
   let content
@@ -62,7 +64,9 @@ const DropdownUser = () => {
           <span className="block text-sm font-medium text-black ">
             {firstname} {lastname}
           </span>
-          <span className="block text-xs">{content}</span>
+          <span className="block text-xs uppercase">
+            {content}-{department}
+          </span>
         </span>
 
         <svg

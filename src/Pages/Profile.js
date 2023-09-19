@@ -120,7 +120,7 @@ const Profile = () => {
                     Department
                   </label>
                   <p className=" bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md">
-                    {firstname}
+                    {department}
                   </p>
                 </div>
               ) : null}
