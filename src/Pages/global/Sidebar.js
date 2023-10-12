@@ -4,7 +4,7 @@ import leftArrow from '../../assets/svgs/leftArrow.svg'
 import logout from '../../assets/svgs/logout.svg'
 import { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { SUPER_SUPER_ADMIN_SIDEBAR_LINKS } from '../lib/constants/navigation'
+import { SYSTEM_ADMINISTRATOR_SIDEBAR_LINKS } from '../lib/constants/navigation'
 import { SUPERADMIN_SIDEBAR_LINKS } from '../lib/constants/navigation'
 import { ADMIN_SIDEBAR_LINKS } from '../lib/constants/navigation'
 import { USER_SIDEBAR_LINKS } from '../lib/constants/navigation'
@@ -79,7 +79,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   } else if (+role === 3) {
     content = USER_SIDEBAR_LINKS
   } else if (+role === 4) {
-    content = SUPER_SUPER_ADMIN_SIDEBAR_LINKS
+    content = SYSTEM_ADMINISTRATOR_SIDEBAR_LINKS
   }
   return (
     <div className="relative scrollbar ">

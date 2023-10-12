@@ -234,7 +234,11 @@ const CreateUser = () => {
             >
               <option value="">--</option>
               {dept.map((dept) => (
-                <option key={dept.department_id} value={dept.department_id}>
+                <option
+                  className="capitalize"
+                  key={dept.department_id}
+                  value={dept.department_id}
+                >
                   {dept.department}
                 </option>
               ))}
@@ -254,7 +258,11 @@ const CreateUser = () => {
               {unit.map((unit) => {
                 // console.log(userValue.values.unit_id === unit.unit_id)
                 return (
-                  <option key={unit.unit_id} value={unit.unit_id}>
+                  <option
+                    className="capitalize"
+                    key={unit.unit_id}
+                    value={unit.unit_id}
+                  >
                     {unit.unit}
                   </option>
                 )

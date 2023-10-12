@@ -5,7 +5,7 @@ import documents from '../../../assets/svgs/documents.svg'
 import departments from '../../../assets/svgs/departments.svg'
 import dashboard from '../../../assets/svgs/dashboard.svg'
 
-export const SUPER_SUPER_ADMIN_SIDEBAR_LINKS = [
+export const SYSTEM_ADMINISTRATOR_SIDEBAR_LINKS = [
   {
     key: 'dashboard',
     label: 'Dashboard',

@@ -5,6 +5,7 @@ import close from '../assets/svgs/close.svg'
 import uploadedFile from '../assets/svgs/uploadedFile.svg'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import ClipLoader from 'react-spinners/ClipLoader'
@@ -14,6 +15,10 @@ const UploadDocument = () => {
   const goBack = () => {
     navigate(-1)
   }
+
+  const { email, create_by, firstname, lastname, role } = useSelector(
+    (state) => state.user.user
+  )
 
   const ownerInputRef = useRef(null)
   const unitInputRef = useRef(null)
@@ -197,6 +202,8 @@ const UploadDocument = () => {
     }
   }
 
+  console.log(create_by)
+
   const UploadValue = useFormik({
     initialValues: {
       document_owner: '',
@@ -207,6 +214,7 @@ const UploadDocument = () => {
       email: '',
       purpose: '',
       // image: null,
+      create_by: create_by,
     },
     // validationSchema: Yup.object({
     //   firstname: Yup.string()
@@ -266,6 +274,8 @@ const UploadDocument = () => {
       // formData.append('uploaded_dt', UploadValue.values.uploaded_dt)
       formData.append('email', UploadValue.values.email)
       formData.append('purpose', UploadValue.values.purpose)
+      formData.append('create_by', UploadValue.values.create_by)
+      console.log(UploadValue.values.create_by)
 
       try {
         const response = await axios.post(
@@ -564,12 +574,11 @@ const UploadDocument = () => {
               >
                 <option>--</option>
                 {unit.map((unit) => {
-                  console.log(UploadValue.values.unit_id === unit.unit_id)
                   return (
                     <option
                       key={unit.unit_id}
                       value={unit.unit_id}
-                      selected={UploadValue.values.unit_id === unit.unit_id}
+                      // selected={UploadValue.values.unit_id === unit.unit_id}
                     >
                       {unit.unit}
                     </option>
