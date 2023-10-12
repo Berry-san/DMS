@@ -14,7 +14,7 @@ import ShareButton from '../components/ShareButton/ShareButton'
 const DocumentType = () => {
   const { documentId } = useParams()
   const decodedID = String(atob(documentId), 10)
-  console.log(decodedID)
+  
   const navigate = useNavigate()
   const goBack = () => {
     navigate(-1)

@@ -18,7 +18,6 @@ const UserDocument = () => {
 
   const { docOwner } = useParams()
   const decodedID = String(atob(docOwner), 10)
-  console.log(decodedID)
 
   const extensionToImage = {
     pdf: pdf,

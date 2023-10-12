@@ -275,7 +275,6 @@ const UploadDocument = () => {
       formData.append('email', UploadValue.values.email)
       formData.append('purpose', UploadValue.values.purpose)
       formData.append('create_by', UploadValue.values.create_by)
-      console.log(UploadValue.values.create_by)
 
       try {
         const response = await axios.post(

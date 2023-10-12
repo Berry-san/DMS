@@ -16,7 +16,6 @@ const UnitList = () => {
 
   const { departmentId } = useParams()
   const decodedID = String(atob(departmentId), 10)
-  console.log(decodedID)
 
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(false)
