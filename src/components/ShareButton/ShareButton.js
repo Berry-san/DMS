@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import ReactDOM from 'react-dom'
 import { toast } from 'react-toastify'
-// import forward from '../../assets/svgs/forward.svg'
 
-const ShareButton = ({ link, icon }) => {
+const ShareButton = ({ link, icon, handleDelete }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const dropdownRef = useRef(null)
@@ -39,28 +37,14 @@ const ShareButton = ({ link, icon }) => {
   //   const link = 'hello'
 
   const copyLink = () => {
-    const linkToCopy = link
-
-    // // Create a temporary input element to copy the link to the clipboard
-    // const tempInput = document.createElement('input')
-    // document.body.appendChild(tempInput)
-    // tempInput.value = linkToCopy
-    // tempInput.select()
-
-    // // Execute the 'copy' command
-    // document.execCommand('copy')
-
-    // // Remove the temporary input element
-    // document.body.removeChild(tempInput)
+    const linkToCopy = `${link}`
     navigator.clipboard
       .writeText(linkToCopy)
       .then(() => {
-        // Notify the user that the link has been copied
         toast.success('Link copied to clipboard')
         closeDropdown()
       })
       .catch((error) => {
-        // Handle any errors that may occur during copying
         toast.error('Error copying link:', error)
       })
     closeDropdown()
@@ -104,7 +88,7 @@ const ShareButton = ({ link, icon }) => {
       {isDropdownOpen && (
         <div className="absolute right-0 z-20 w-40 mt-2 bg-white rounded-md shadow-lg">
           <div
-            className="flex flex-col py-1"
+            className="flex flex-col py-1 font-semibold"
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="options-menu"
@@ -129,6 +113,13 @@ const ShareButton = ({ link, icon }) => {
               role="menuitem"
             >
               WhatsApp
+            </button>
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 text-sm text-rose-700 hover:bg-gray-100 hover:text-gray-900"
+              role="menuitem"
+            >
+              Delete
             </button>
           </div>
         </div>

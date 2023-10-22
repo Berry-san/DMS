@@ -15,7 +15,7 @@ const CreateUser = () => {
     navigate(-1)
   }
 
-  const { email, create_by } = useSelector((state) => state.user.user)
+  const { create_by } = useSelector((state) => state.user.user)
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -108,7 +108,6 @@ const CreateUser = () => {
   })
 
   useEffect(() => {
-    // Fetch options for the second field based on selectedValue1
     if (userValue.values.department_id) {
       const config = {
         headers: {
@@ -256,7 +255,6 @@ const CreateUser = () => {
             >
               <option>--</option>
               {unit.map((unit) => {
-                // console.log(userValue.values.unit_id === unit.unit_id)
                 return (
                   <option
                     className="capitalize"

@@ -1,20 +1,18 @@
-import eye from '../assets/svgs/eye.svg'
 import forward from '../assets/svgs/forward.svg'
 import trash from '../assets/svgs/trash.svg'
-import Search from '../components/Search/Search'
-import playGif from '../assets/svgs/play.gif'
 import back from '../assets/svgs/back.svg'
-import { useNavigate, Link, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Pagination from '../components/Pagination/Pagination'
 import axios from 'axios'
 import { API_BASE } from '../middleware/API_BASE'
 import ShareButton from '../components/ShareButton/ShareButton'
+import Modal from '../components/Modal/Modal'
 
 const DocumentType = () => {
   const { documentId } = useParams()
   const decodedID = String(atob(documentId), 10)
-  
+
   const navigate = useNavigate()
   const goBack = () => {
     navigate(-1)
@@ -25,8 +23,10 @@ const DocumentType = () => {
   const [sortOrder, setSortOrder] = useState('asc')
   const [filteredData, setFilteredData] = useState([])
   const [tableHeader, setTableHeader] = useState()
+  const [showModal, setShowModal] = useState(false)
+  const [fileToDelete, setFileToDelete] = useState(null)
 
-  const [currentPage, setCurrentPage] = useState(1) // Track the current page
+  const [currentPage, setCurrentPage] = useState(1)
   const usersPerPage = 10
 
   const paginate = (pageNumber) => {
@@ -36,10 +36,7 @@ const DocumentType = () => {
   const indexOfLastUser = currentPage * usersPerPage
   const indexOfFirstUser = indexOfLastUser - usersPerPage
   const currentUsers = filteredData.slice(indexOfFirstUser, indexOfLastUser)
-  // Change page
-  // const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
-  console.log(currentPage)
   useEffect(() => {
     const config = {
       headers: {
@@ -47,7 +44,7 @@ const DocumentType = () => {
         'x-api-key': 987654,
       },
     }
-    // Fetch data from your API endpoint
+
     axios
       .get(
         API_BASE + `get_document_details_by_id?document_id=${decodedID}`,
@@ -57,13 +54,11 @@ const DocumentType = () => {
         const apiData = res.data.result
         const dataWithId = apiData.map((item, index) => ({
           ...item,
-          id: index + 1, // You can use a more appropriate logic to generate IDs
+          id: index + 1,
         }))
         setFilteredData(dataWithId)
         setSortedData(dataWithId)
         if (apiData.length > 0) setTableHeader(apiData[0].document_type)
-        console.log(dataWithId)
-        // console.log(response.data)
       })
       .catch((error) => {
         console.log(error)
@@ -81,16 +76,39 @@ const DocumentType = () => {
   }
 
   const handleSortByDate = () => {
+    // Use the current sorting order to determine the new order
+    const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
+
     const sorted = [...filteredData].sort((a, b) => {
-      if (sortOrder === 'asc') {
-        return new Date(a.birthDate) - new Date(b.birthDate)
+      if (newSortOrder === 'asc') {
+        return new Date(a.uploaded_dt) - new Date(b.uploaded_dt)
       } else {
-        return new Date(b.birthDate) - new Date(a.birthDate)
+        return new Date(b.uploaded_dt) - new Date(a.uploaded_dt)
       }
     })
 
     setFilteredData(sorted)
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    setSortOrder(newSortOrder)
+  }
+
+  const openDeleteModal = (docID) => {
+    setFileToDelete(docID)
+    setShowModal(true)
+  }
+
+  const closeDeleteModal = () => {
+    setShowModal(false)
+    setFileToDelete(null)
+  }
+
+  const handleDelete = (docID) => {
+    // Make the API call to delete the file with docID
+    // After successful deletion, update the UI to reflect the deletion
+    const updatedData = filteredData.filter((doc) => doc.id !== docID)
+    setFilteredData(updatedData)
+
+    // Close the modal after deletion
+    closeDeleteModal()
   }
 
   return (
@@ -109,24 +127,6 @@ const DocumentType = () => {
         <div className="items-center hidden space-x-10 md:flex w-72">
           {/* <Search placeholder="Search..." /> */}
           <div className="rounded w-full border-b border-[#4ECCA3] px-5 py-2 text-gray-500 focus-within:text-gray-500 bg-[#f4f4f4] focus:outline-none focus:bg-[#f4f4f4] ">
-            {/* <span className="inset-y-0 right-0 z-10 flex items-center mr-3 ">
-              <button
-                type="submit"
-                className="p-1 focus:outline-none focus:shadow-outline"
-              >
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  className="w-6 h-6"
-                >
-                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-              </button>
-            </span> */}
             <input
               type="search"
               name="search"
@@ -137,13 +137,10 @@ const DocumentType = () => {
               onChange={handleSearchChange}
             />
           </div>
-          <Link to="/uploadDocument">
-            <img src={playGif} alt="" />
-          </Link>
         </div>
       </div>
       <div className="">
-        <div className="border rounded  border-border_color">
+        <div className="border rounded border-border_color">
           <table className="w-full table-auto">
             <thead className="text-sm font-bold bg-green">
               <tr className="text-left bg-green">
@@ -158,8 +155,11 @@ const DocumentType = () => {
                 <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
                   Purpose
                 </th>
-                <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
-                  Date
+                <th
+                  className="px-2 py-2 font-medium text-black cursor-pointer md:py-4 md:px-4"
+                  onClick={handleSortByDate}
+                >
+                  Date {sortOrder === 'asc' ? ' ▲' : ' ▼'}
                 </th>
                 <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
                   Action
@@ -168,13 +168,7 @@ const DocumentType = () => {
             </thead>
             <tbody className="text-sm font-medium leading-5">
               {currentUsers?.map((owner) => {
-                // if (owner.document_id === decodedID) {
-                //   setTitle(owner.document_type)
-                // } else {
-                //   setTitle('')
-                // }
-                console.log(owner.document_id === decodedID)
-                const link = API_BASE + `assets/img/useraccount/${owner.image}`
+                const link = `https://connectapi.mosquepay.org/cmd_system_api/assets/img/useraccount/${owner.image}`
                 return (
                   <tr key={owner.id}>
                     <td className="p-4 border-b border-border_color xl:pl-11">
@@ -195,8 +189,18 @@ const DocumentType = () => {
                     <td className="p-4 border-b border-border_color dark:border-strokedark">
                       <p className="text-black">{owner.uploaded_dt}</p>
                     </td>
-                    <td className="z-30 p-4 border-b border-border_color dark:border-strokedark">
-                      <ShareButton link={link} icon={forward} />
+                    <td className="z-30 flex items-center p-4 space-x-4 border-b border-border_color dark:border-strokedark">
+                      <ShareButton
+                        link={link}
+                        icon={forward}
+                        // handleDelete={}
+                      />
+                      <span
+                        className="cursor-pointer"
+                        onClick={() => openDeleteModal(owner.id)}
+                      >
+                        <img src={trash} alt="" />
+                      </span>
                     </td>
                   </tr>
                 )
@@ -204,6 +208,7 @@ const DocumentType = () => {
             </tbody>
           </table>
         </div>
+
         <div className="flex items-center justify-end">
           <Pagination
             currentPage={currentPage}
@@ -214,6 +219,26 @@ const DocumentType = () => {
             className="my-3"
           />
         </div>
+
+        <Modal isVisible={showModal} onClose={closeDeleteModal}>
+          <h2 className="mb-5 font-semibold text-center">
+            Are you sure you want to delete this file?
+          </h2>
+          <div className="flex justify-center space-x-2">
+            <button
+              className="px-4 py-2 text-white rounded bg-rose-600"
+              onClick={() => handleDelete(fileToDelete)}
+            >
+              Yes
+            </button>
+            <button
+              className="px-4 py-2 text-white bg-blue-600 rounded"
+              onClick={closeDeleteModal}
+            >
+              No
+            </button>
+          </div>
+        </Modal>
       </div>
     </>
   )

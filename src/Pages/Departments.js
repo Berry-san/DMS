@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react'
 import right from '../assets/svgs/right.svg'
 import back from '../assets/svgs/back.svg'
@@ -142,6 +141,7 @@ const Departments = () => {
           <div className="flex items-center justify-between w-full">
             <button
               type="submit"
+              disabled={loading}
               className="px-4 py-3 mt-5 text-xs font-semibold rounded bg-green text-black_color"
             >
               Create Department

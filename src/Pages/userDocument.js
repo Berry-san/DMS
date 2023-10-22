@@ -14,7 +14,6 @@ import ShareButton from '../components/ShareButton/ShareButton'
 
 const UserDocument = () => {
   const [documents, setDocuments] = useState([])
-  // const [extension, setExtension] = useState([])
 
   const { docOwner } = useParams()
   const decodedID = String(atob(docOwner), 10)
@@ -29,7 +28,6 @@ const UserDocument = () => {
     docx: doc,
     ppt: ppt,
     pptx: ppt,
-    // Add more extensions and image URLs as needed
   }
 
   useEffect(() => {
@@ -46,12 +44,9 @@ const UserDocument = () => {
         const apiData = res.data.result
         const dataWithId = apiData.map((item, index) => ({
           ...item,
-          id: index + 1, // You can use a more appropriate logic to generate IDs
+          id: index + 1,
         }))
         setDocuments(dataWithId)
-        // const fileExtensions = apiData.map((ext) => {
-        //   return console.log(ext)
-        // })
       })
       .catch((err) => console.log(err))
   }, [decodedID])
@@ -60,6 +55,12 @@ const UserDocument = () => {
   const goBack = () => {
     navigate(-1)
   }
+
+  const handleDelete = (documentId) => {
+    const filteredDocuments = documents.filter((doc) => doc.id !== documentId)
+    setDocuments(filteredDocuments)
+  }
+
   return (
     <>
       <div className="flex items-center justify-between mb-5">
@@ -88,7 +89,11 @@ const UserDocument = () => {
                 key={doc.id}
               >
                 <div className="absolute top-0 right-0">
-                  <ShareButton link={link} icon={ellipsis} />
+                  <ShareButton
+                    link={link}
+                    icon={ellipsis}
+                    handleDelete={() => handleDelete(doc.id)}
+                  />
                 </div>
                 <a
                   className="items-center justify-center mt-5"

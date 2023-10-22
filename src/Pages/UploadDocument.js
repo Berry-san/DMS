@@ -4,7 +4,7 @@ import back from '../assets/svgs/back.svg'
 import close from '../assets/svgs/close.svg'
 import uploadedFile from '../assets/svgs/uploadedFile.svg'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
+// import * as Yup from 'yup'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { toast } from 'react-toastify'
@@ -16,9 +16,7 @@ const UploadDocument = () => {
     navigate(-1)
   }
 
-  const { email, create_by, firstname, lastname, role } = useSelector(
-    (state) => state.user.user
-  )
+  const { create_by } = useSelector((state) => state.user.user)
 
   const ownerInputRef = useRef(null)
   const unitInputRef = useRef(null)
@@ -32,13 +30,11 @@ const UploadDocument = () => {
   const [fetchingData, setFetchingData] = useState(false)
   const [existingOwners, setExistingOwners] = useState(new Set())
   const [existingUnits, setExistingUnits] = useState(new Set())
-  // const [uniqueOwners, setUniqueOwners] = useState(new Set())
   const [suggestedOwners, setSuggestedOwners] = useState([])
   const [suggestedUnits, setSuggestedUnits] = useState([])
   const [selectedUnitName, setSelectedUnitName] = useState('')
   const [selectedUnitId, setSelectedUnitId] = useState('')
   const [isOwnerDropdownOpen, setIsOwnerDropdownOpen] = useState(false)
-  const [isUnitDropdownOpen, setIsUnitDropdownOpen] = useState(false)
 
   const config = {
     headers: {
@@ -46,50 +42,6 @@ const UploadDocument = () => {
       'x-api-key': 987654,
     },
   }
-
-  // useEffect(() => {
-  //   // Event listener for clicks outside the Document Owner input
-  //   const handleOwnerClickOutside = (e) => {
-  //     if (
-  //       isOwnerDropdownOpen &&
-  //       ownerInputRef.current &&
-  //       !ownerInputRef.current.contains(e.target)
-  //     ) {
-  //       setIsOwnerDropdownOpen(false)
-  //     }
-  //   }
-
-  //   // Event listener for clicks outside the Select Unit input
-  //   const handleUnitClickOutside = (e) => {
-  //     if (
-  //       isUnitDropdownOpen &&
-  //       unitInputRef.current &&
-  //       !unitInputRef.current.contains(e.target)
-  //     ) {
-  //       setIsUnitDropdownOpen(false)
-  //     }
-  //   }
-
-  //   // Event listener for the "Esc" key to close both dropdowns
-  //   const handleEscKey = (e) => {
-  //     if (e.key === 'Escape') {
-  //       setIsOwnerDropdownOpen(false)
-  //       setIsUnitDropdownOpen(false)
-  //     }
-  //   }
-
-  //   // Add event listeners
-  //   document.addEventListener('mousedown', handleOwnerClickOutside)
-  //   document.addEventListener('mousedown', handleUnitClickOutside)
-  //   document.addEventListener('keydown', handleEscKey)
-
-  //   // Remove event listeners on component unmount
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleOwnerClickOutside)
-  //     document.removeEventListener('mousedown', handleUnitClickOutside)
-  //     document.removeEventListener('keydown', handleEscKey)
-  //   }
-  // }, [isOwnerDropdownOpen, isUnitDropdownOpen])
 
   useEffect(() => {
     const config = {
@@ -131,17 +83,6 @@ const UploadDocument = () => {
 
     const newFile = e.target.files[0]
     setSelectedFile(newFile)
-    // if (newFile) {
-    //   if (newFile.size <= 2 * 1024 * 1024) {
-    //     // File size is within the limit (2MB)
-    //     setSelectedFile(newFile)
-    //   } else {
-    //     // File size exceeds the limit
-    //     alert('File size exceeds the 2MB limit. Please choose a smaller file.')
-    //     e.target.value = '' // Clear the file input
-    //     setSelectedFile(null)
-    //   }
-    // }
   }
 
   const handleRemoveFile = () => {
@@ -192,7 +133,6 @@ const UploadDocument = () => {
       if (unitData) {
         const unitId = unitData.unit_id
         // console.log(unitId)
-        // Set the unit_id for the selected unit in your form
         UploadValue.setFieldValue('unit_id', unitId)
       } else {
         console.log(`Unit '${unitName}' not found.`)
@@ -230,11 +170,6 @@ const UploadDocument = () => {
       setLoading(true)
       setError(null)
 
-      // if (!existingUnits.has(selectedUnitName.toLowerCase())) {
-      //   //       // The entered unit is not in the existing units list, create a new unit
-      //   await createUnit()
-      // }
-
       const capitalizedDocumentOwner = UploadValue.values.document_owner
         .toLowerCase()
         .replace(/\b\w/g, (char) => char.toUpperCase())
@@ -265,13 +200,11 @@ const UploadDocument = () => {
         formData.append('imageName', selectedFile.name)
       }
 
-      // Append other form input values to the formData
       formData.append('document_owner', UploadValue.values.document_owner)
       formData.append('document_id', UploadValue.values.document_id)
       formData.append('department_id', UploadValue.values.department_id)
       formData.append('unit_id', UploadValue.values.unit_id)
       formData.append('phonenumber', UploadValue.values.phonenumber)
-      // formData.append('uploaded_dt', UploadValue.values.uploaded_dt)
       formData.append('email', UploadValue.values.email)
       formData.append('purpose', UploadValue.values.purpose)
       formData.append('create_by', UploadValue.values.create_by)
@@ -286,7 +219,6 @@ const UploadDocument = () => {
         if (+response.data.status_code === 0) {
           toast.success(response.data.message)
           if (!existingUnits.has(selectedUnitName.toLowerCase())) {
-            // The entered unit is not in the existing units list, create a new unit
             await createUnit()
           }
           UploadValue.resetForm()
@@ -301,16 +233,6 @@ const UploadDocument = () => {
         setError(error)
         setLoading(false)
       }
-
-      // const formData = {
-      //   ...UploadValue.values,
-      //   image: selectedFile,
-      // }
-
-      // // Log the form values, including the selected files
-      // console.log(formData)
-
-      console.log(selectedFile)
     },
   })
 
@@ -410,7 +332,6 @@ const UploadDocument = () => {
 
   return (
     <>
-      {/* pb-7 sm:pb-5 md:pb-5 */}
       <div className="flex items-center justify-between w-full mb-5">
         <div className="flex items-center space-x-5">
           <img
@@ -421,11 +342,6 @@ const UploadDocument = () => {
           />
           <h3 className="flex text-lg font-bold text-left">Upload Document</h3>
         </div>
-        {/* <div className="">
-          <a>
-            <img src={playGif} alt="" />
-          </a>
-        </div> */}
       </div>
       <form
         onSubmit={UploadValue.handleSubmit}
@@ -435,8 +351,6 @@ const UploadDocument = () => {
         <div className="col-span-7 md:col-span-5">
           <div className="flex items-center justify-center w-full">
             <label
-              // onClick={handleFileChange}
-              //   onClick={handleUploadClick}
               htmlFor="dropzone-file"
               className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer border-border_color bg-gray-50 dark:hover:bg-bray-800 hover:bg-gray-100"
             >
@@ -497,8 +411,8 @@ const UploadDocument = () => {
                   name="document_owner"
                   value={UploadValue.values.document_owner}
                   onChange={handleDocumentOwnerChange}
-                  ref={ownerInputRef} // Add a ref to the input
-                  onFocus={() => setIsOwnerDropdownOpen(true)} // Open the dropdown on focus
+                  ref={ownerInputRef}
+                  onFocus={() => setIsOwnerDropdownOpen(true)}
                   onBlur={() => setIsOwnerDropdownOpen(false)}
                   className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
                 />
@@ -525,7 +439,7 @@ const UploadDocument = () => {
                 value={UploadValue.values.document_id}
                 name="document_id"
                 onChange={UploadValue.handleChange}
-                className=" rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
+                className=" rounded capitalize text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
               >
                 <option>--</option>
                 {documentType.map((doc) => {
@@ -545,7 +459,7 @@ const UploadDocument = () => {
                 value={UploadValue.values.department_id}
                 name="department_id"
                 onChange={UploadValue.handleChange}
-                className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
+                className="rounded capitalize text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
               >
                 <option value="">--</option>
                 {dept.map((dept) => (
@@ -569,7 +483,7 @@ const UploadDocument = () => {
                 value={UploadValue.values.unit_id}
                 name="unit_id"
                 onChange={UploadValue.handleChange}
-                className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
+                className="rounded capitalize text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
               >
                 <option>--</option>
                 {unit.map((unit) => {
@@ -584,35 +498,6 @@ const UploadDocument = () => {
                   )
                 })}
               </select>
-              {/* <input
-                type="text"
-                name="unit_id"
-                value={selectedUnitName} // Display the selected unit name
-                onChange={handleUnitChange}
-                ref={unitInputRef} // Add a ref to the input
-                onFocus={() => setIsUnitDropdownOpen(true)} // Open the dropdown on focus
-                onBlur={() => setIsUnitDropdownOpen(false)}
-                className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
-              /> */}
-              {/* {suggestedUnits.length > 0 && isUnitDropdownOpen && ( */}
-              {/* {suggestedUnits.length > 0 && (
-                <ul className="absolute z-10 w-full py-2 mt-2 bg-white border rounded-lg shadow-lg max-h-[8rem] overflow-auto scrollbar-thin scrollbar-thumb-black">
-                  {suggestedUnits.map((unitSuggestion, index) => {
-                    // console.log(unitSuggestion.unit)
-                    return (
-                      <li
-                        key={index}
-                        onClick={() =>
-                          handleSuggestionUnitClick(unitSuggestion)
-                        }
-                        className="max-w-xs px-4 py-2 capitalize cursor-pointer hover:bg-gray-200"
-                      >
-                        {unitSuggestion.unit}
-                      </li>
-                    )
-                  })}
-                </ul>
-              )} */}
             </div>
             <div className="col-span-2 md:col-span-1">
               <label htmlFor="" className="text-xs font-semibold">
@@ -638,18 +523,7 @@ const UploadDocument = () => {
                 className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
               />
             </div>
-            {/* <div className="grid col-span-2 md:col-span-1">
-              <label htmlFor="" className="text-xs font-semibold">
-                Date
-              </label>
-              <input
-                type="date"
-                name="uploaded_dt"
-                value={UploadValue.values.uploaded_dt}
-                onChange={UploadValue.handleChange}
-                className="rounded text-sm font-semibold tracking-[0.6px] text-black_color bg-dull_white w-full p-3 focus:bg-white focus:outline-black_color"
-              />
-            </div> */}
+
             <div className="col-span-2">
               <label htmlFor="" className="text-xs font-semibold">
                 Purpose
