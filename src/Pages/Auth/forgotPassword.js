@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import loginLogo from '../../assets/images/loginLogo.svg'
 import { useState } from 'react'
 import { API_BASE } from '../../middleware/API_BASE'
@@ -12,6 +12,14 @@ import * as Yup from 'yup'
 
 function ForgotPassword() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const searchParams = new URLSearchParams(location.search)
+
+  // // Retrieve the parameters by name (e.g., token, email, user_type_id)
+  // const token = searchParams.get('token')
+  const email = searchParams.get('email')
+  const user_type_id = searchParams.get('user_type_id')
+  const { token } = useParams()
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -23,9 +31,11 @@ function ForgotPassword() {
 
   const changePasswordValue = useFormik({
     initialValues: {
-      email: '',
+      email,
       password: '',
-      confirmPassword: '',
+      // confirmPassword: '',
+      token: token,
+      user_type_id,
     },
     validationSchema: Yup.object().shape({
       password: Yup.string()
@@ -49,10 +59,11 @@ function ForgotPassword() {
           'x-api-key': 987654,
         },
       }
+      // console.log(changePasswordValue.values)
 
       try {
         const response = await axios.post(
-          API_BASE + 'user_login',
+          API_BASE + 'forget_password',
           qs.stringify(changePasswordValue.values),
           config
         )
@@ -70,10 +81,9 @@ function ForgotPassword() {
         setError(error)
         setLoading(false)
       }
-
-      console.log(loading)
     },
   })
+  console.log(changePasswordValue.values)
 
   return (
     <div className="flex items-center justify-center h-screen bg-dull_white">
@@ -92,27 +102,7 @@ function ForgotPassword() {
           <div className="px-10 py-6">
             <div>
               <form onSubmit={changePasswordValue.handleSubmit}>
-                <div className="grid grid-cols-1 text-left md:grid-cols-2 gap-x-5 gap-y-5 ">
-                  <div>
-                    <label htmlFor="" className="text-xs font-semibold">
-                      Email Address:
-                    </label>
-                    <input
-                      type="email"
-                      className="w-full bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
-                      id="email"
-                      name="email"
-                      value={changePasswordValue.values.email}
-                      onChange={changePasswordValue.handleChange}
-                      onBlur={changePasswordValue.handleBlur}
-                    />
-                    {changePasswordValue.touched.email &&
-                    changePasswordValue.errors.email ? (
-                      <p className="mt-1 text-xs font-medium text-red-500">
-                        {changePasswordValue.errors.email}
-                      </p>
-                    ) : null}
-                  </div>
+                <div className="grid grid-cols-1 text-left  gap-x-5 gap-y-5 ">
                   <div className="relative">
                     <label htmlFor="" className="text-xs font-semibold">
                       New Password:
@@ -202,7 +192,7 @@ function ForgotPassword() {
                 <div className="flex items-center justify-between">
                   <button
                     type="submit"
-                    className="w-40 px-4 py-3 mt-5 text-xs font-semibold rounded bg-green text-black_color"
+                    className="w-40 px-4 py-3 mt-5 mx-auto text-xs font-semibold rounded bg-green text-black_color"
                     disabled={loading}
                   >
                     {loading ? (

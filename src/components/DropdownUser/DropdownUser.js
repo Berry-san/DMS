@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import chain from '../../assets/svgs/chain.svg'
 import Logout from '../../Pages/Auth/Logout'
 import profile from '../../assets/svgs/profile.svg'
 import { useSelector } from 'react-redux'
@@ -118,6 +119,16 @@ const DropdownUser = () => {
                 />
               </svg>
               My Profile
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="auditTrail"
+              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+              onClick={() => setDropdownOpen(false)}
+            >
+              <img src={chain} className="w-5 h-5" alt="" />
+              Audit Trail
             </Link>
           </li>
         </ul>

@@ -58,7 +58,7 @@ function Login() {
           qs.stringify(loginValue.values),
           config
         )
-        console.log(response.data)
+        // console.log(response.data)
         if (response.data['status_code'] === '0') {
           const allUserDetails = response.data.user_details
 
@@ -77,7 +77,7 @@ function Login() {
             department,
             unit,
           } = loginUser
-          console.log(loginUser)
+          // console.log(loginUser)
 
           dispatch(
             setUserData({
@@ -90,6 +90,7 @@ function Login() {
               create_by: ref_id,
               department,
               unit,
+              ref_id,
             })
           )
           toast.success(response.data.message)
@@ -104,8 +105,6 @@ function Login() {
         setError(error)
         setLoading(false)
       }
-
-      console.log(loading)
     },
   })
 
@@ -228,7 +227,10 @@ function Login() {
                   >
                     Sign In
                   </button>
-                  <Link to="/token" className="mt-5 text-sm font-semibold">
+                  <Link
+                    to="/ResetPassword"
+                    className="mt-5 text-sm font-semibold"
+                  >
                     Forgot Password ?
                   </Link>
                 </div>

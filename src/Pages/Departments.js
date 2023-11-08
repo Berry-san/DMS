@@ -39,7 +39,6 @@ const Departments = () => {
       })
       .catch((err) => console.log(err))
   }, [])
-  console.log(department)
 
   const handleSubmit = async (e) => {
     e.preventDefault()

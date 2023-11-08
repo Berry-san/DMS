@@ -1,13 +1,11 @@
 import folders from '../assets/svgs/folders.svg'
-// import Search from '../components/Search/Search'
-import playGif from '../assets/svgs/play.gif'
 import back from '../assets/svgs/back.svg'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Modal from '../components/Modal/Modal'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import qs from 'qs'
 import { API_BASE } from '../middleware/API_BASE'
 
@@ -49,7 +47,6 @@ const Documents = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(docForm)
     setLoading(true)
     setError(null)
 
@@ -148,6 +145,7 @@ const Documents = () => {
             <button
               type="submit"
               className="px-4 py-3 mt-5 text-xs font-semibold rounded bg-green text-black_color"
+              disabled={loading}
             >
               Create Type
             </button>
@@ -158,7 +156,8 @@ const Documents = () => {
         <div>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
             {docType.map((type) => {
-              const encodedValue = btoa(type.document_id.toString())
+              const encoded = encodeURIComponent(type.document_id)
+              const encodedValue = btoa(encoded)
               // console.log(encodedValue)
               return (
                 <Link

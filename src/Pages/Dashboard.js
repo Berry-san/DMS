@@ -9,8 +9,11 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { API_BASE } from '../middleware/API_BASE'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 const Dashboard = () => {
+  const { role } = useSelector((state) => state.user.user)
+
   const [docOwners, setDocOwners] = useState('')
   const [documents, setDocuments] = useState('')
   const [departments, setDepartments] = useState('')
@@ -38,28 +41,33 @@ const Dashboard = () => {
     <>
       <div>
         <p className="pb-6 text-lg font-bold">System Overview.</p>
+
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="overflow-hidden rounded-md">
-            <div className="flex px-5 py-8 bg-green/50">
-              <div>
-                <img src={man} alt="" />
+          {/* Document Owners */}
+          {role !== '3' ? (
+            <div className="overflow-hidden rounded-md">
+              <div className="flex px-5 py-8 bg-green/50">
+                <div>
+                  <img src={man} alt="" />
+                </div>
+                <div className="truncate ps-7">
+                  <p className="text-sm font-bold truncate">Document Owners</p>
+                  <p className="pt-1 text-sm font-medium text-black_color">
+                    Count: {docOwners}
+                  </p>
+                </div>
               </div>
-              <div className="truncate ps-7">
-                <p className="text-sm font-bold truncate">Document Owners</p>
-                <p className="pt-1 text-sm font-medium text-black_color">
-                  Count: {docOwners}
-                </p>
-              </div>
+              <Link to="documentOwners">
+                <div className="flex justify-between p-5 text-xs text-white bg-black_color hover:scale-105">
+                  <span className="font-semibold">View all Users</span>
+                  <span>
+                    <img src={rightArrow} alt="" />
+                  </span>
+                </div>
+              </Link>
             </div>
-            <Link to="documentOwners">
-              <div className="flex justify-between p-5 text-xs text-white bg-black_color hover:scale-105">
-                <span className="font-semibold">View all Users</span>
-                <span>
-                  <img src={rightArrow} alt="" />
-                </span>
-              </div>
-            </Link>
-          </div>
+          ) : null}
+          {/* Documents */}
           <div className="overflow-hidden rounded-md">
             <div className="flex px-5 py-8 bg-green/50">
               <div>
@@ -81,27 +89,30 @@ const Dashboard = () => {
               </div>
             </Link>
           </div>
-          <div className="overflow-hidden rounded-md">
-            <div className="flex px-5 py-8 bg-green/50">
-              <div>
-                <img src={networking} alt="" />
+          {/* Departments */}
+          {role === '1' || role === '4' ? (
+            <div className="overflow-hidden rounded-md">
+              <div className="flex px-5 py-8 bg-green/50">
+                <div>
+                  <img src={networking} alt="" />
+                </div>
+                <div className="truncate ps-7">
+                  <p className="text-sm font-bold truncate">Departments</p>
+                  <p className="pt-1 text-sm font-medium text-black_color">
+                    Count: {departments}
+                  </p>
+                </div>
               </div>
-              <div className="truncate ps-7">
-                <p className="text-sm font-bold truncate">Departments</p>
-                <p className="pt-1 text-sm font-medium text-black_color">
-                  Count: {departments}
-                </p>
-              </div>
+              <Link to="departments">
+                <div className="flex justify-between p-5 text-xs text-white bg-black_color hover:scale-105">
+                  <span className="font-semibold">View all departments</span>
+                  <span>
+                    <img src={rightArrow} alt="" />
+                  </span>
+                </div>
+              </Link>
             </div>
-            <Link to="departments">
-              <div className="flex justify-between p-5 text-xs text-white bg-black_color hover:scale-105">
-                <span className="font-semibold">View all departments</span>
-                <span>
-                  <img src={rightArrow} alt="" />
-                </span>
-              </div>
-            </Link>
-          </div>
+          ) : null}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 pt-[40px]">

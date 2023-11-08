@@ -10,13 +10,14 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import ClipLoader from 'react-spinners/ClipLoader'
 import { API_BASE } from '../middleware/API_BASE'
+import Audit from '../components/Audit/Audit'
 const UploadDocument = () => {
   const navigate = useNavigate()
   const goBack = () => {
     navigate(-1)
   }
 
-  const { create_by } = useSelector((state) => state.user.user)
+  const { create_by, email } = useSelector((state) => state.user.user)
 
   const ownerInputRef = useRef(null)
   const unitInputRef = useRef(null)
@@ -29,11 +30,11 @@ const UploadDocument = () => {
   const [documentType, setDocumentType] = useState([])
   const [fetchingData, setFetchingData] = useState(false)
   const [existingOwners, setExistingOwners] = useState(new Set())
-  const [existingUnits, setExistingUnits] = useState(new Set())
+  // const [existingUnits, setExistingUnits] = useState(new Set())
   const [suggestedOwners, setSuggestedOwners] = useState([])
-  const [suggestedUnits, setSuggestedUnits] = useState([])
+  // const [suggestedUnits, setSuggestedUnits] = useState([])
   const [selectedUnitName, setSelectedUnitName] = useState('')
-  const [selectedUnitId, setSelectedUnitId] = useState('')
+  // const [selectedUnitId, setSelectedUnitId] = useState('')
   const [isOwnerDropdownOpen, setIsOwnerDropdownOpen] = useState(false)
 
   const config = {
@@ -65,7 +66,7 @@ const UploadDocument = () => {
       .catch((err) => console.log(err))
 
     axios
-      .get(API_BASE + 'document_details', config)
+      .get(API_BASE + 'docu_ment_details', config)
       .then((res) => {
         // Assuming the response contains an array of document objects
         res.data.result.forEach((item) => {
@@ -142,8 +143,6 @@ const UploadDocument = () => {
     }
   }
 
-  console.log(create_by)
-
   const UploadValue = useFormik({
     initialValues: {
       document_owner: '',
@@ -218,9 +217,9 @@ const UploadDocument = () => {
         console.log(response)
         if (+response.data.status_code === 0) {
           toast.success(response.data.message)
-          if (!existingUnits.has(selectedUnitName.toLowerCase())) {
-            await createUnit()
-          }
+          // if (!existingUnits.has(selectedUnitName.toLowerCase())) {
+          //   await createUnit()
+          // }
           UploadValue.resetForm()
           setSelectedFile(null)
           setSelectedUnitName('')
@@ -233,6 +232,23 @@ const UploadDocument = () => {
         setError(error)
         setLoading(false)
       }
+
+      const logAuditTrail = (action, url, email) => {
+        // Create an audit trail entry
+        const auditTrailEntry = {
+          inserted_dt: new Date().toISOString(), // Current date and time
+          ref_id: create_by,
+          action,
+          document_name: selectedFile.name,
+          email,
+          url,
+        }
+
+        // Log the audit trail entry
+        Audit.logAuditTrail(auditTrailEntry)
+      }
+      const link = `https://connectapi.mosquepay.org/cmd_system_api/assets/img/useraccount/${selectedFile.name}`
+      logAuditTrail('Created Document', link, email)
     },
   })
 
@@ -253,7 +269,7 @@ const UploadDocument = () => {
         )
         .then((res) => {
           setUnit(res.data.result)
-          setSuggestedUnits(res.data.result)
+          // setSuggestedUnits(res.data.result)
           setFetchingData(false)
         })
         .catch((err) => {
@@ -273,16 +289,16 @@ const UploadDocument = () => {
     UploadValue.setFieldValue('document_owner', e.target.value)
   }
 
-  const handleUnitChange = (e) => {
-    const userInput = e.target.value.toLowerCase()
-    setSelectedUnitName(userInput) // Update selectedUnitName
+  // const handleUnitChange = (e) => {
+  //   const userInput = e.target.value.toLowerCase()
+  //   setSelectedUnitName(userInput) // Update selectedUnitName
 
-    // Update suggestions based on user input
-    const suggestions = unit.filter((unitItem) =>
-      unitItem.unit.toLowerCase().includes(userInput)
-    )
-    setSuggestedUnits(suggestions)
-  }
+  //   // Update suggestions based on user input
+  //   const suggestions = unit.filter((unitItem) =>
+  //     unitItem.unit.toLowerCase().includes(userInput)
+  //   )
+  //   setSuggestedUnits(suggestions)
+  // }
 
   // Handle suggestion click
   const handleSuggestionClick = (suggestion) => {
@@ -293,16 +309,16 @@ const UploadDocument = () => {
     setSuggestedOwners([]) // Clear suggestions
   }
 
-  const handleSuggestionUnitClick = (unitSuggestion) => {
-    // Update the input field with the selected unit name (for display)
-    setSelectedUnitName(unitSuggestion.unit)
-    console.log(unitSuggestion)
-    setSelectedUnitId(unitSuggestion.unit_id)
-    // Update the form field with the selected unit_id
-    UploadValue.setFieldValue('unit_id', unitSuggestion.unit_id)
-    // Clear the suggestions
-    setSuggestedUnits([])
-  }
+  // const handleSuggestionUnitClick = (unitSuggestion) => {
+  //   // Update the input field with the selected unit name (for display)
+  //   setSelectedUnitName(unitSuggestion.unit)
+  //   console.log(unitSuggestion)
+  //   setSelectedUnitId(unitSuggestion.unit_id)
+  //   // Update the form field with the selected unit_id
+  //   UploadValue.setFieldValue('unit_id', unitSuggestion.unit_id)
+  //   // Clear the suggestions
+  //   setSuggestedUnits([])
+  // }
 
   const fetchOwnerDetails = async (ownerName) => {
     // const config = {
@@ -314,10 +330,10 @@ const UploadDocument = () => {
     // console.log(ownerName)
     try {
       const response = await axios.get(
-        API_BASE + `document_details?document_owner=${ownerName}`,
+        API_BASE + `docu_ment_details?document_owner=${ownerName}`,
         config
       )
-      console.log(response.data.result)
+
       const ownerDetails = response.data.result[0] // Assuming the API returns a single owner's details
 
       // Populate other form fields with owner details

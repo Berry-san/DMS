@@ -14,10 +14,12 @@ import UnitList from './Pages/Units'
 import Documents from './Pages/Documents'
 import DocumentType from './Pages/DocumentType'
 import Profile from './Pages/Profile'
-import Token from './Pages/Auth/token'
+import Token from './Pages/Auth/Token'
 import ForgotPassword from './Pages/Auth/forgotPassword'
+import AuditTrail from './Pages/AuditTrail'
 import { Route, Navigate, Routes } from 'react-router'
 import { useSelector } from 'react-redux'
+import DocumentTrail from './Pages/DocumentTrail'
 
 function App() {
   const { isAuthenticated } = useSelector((state) => state.user.user)
@@ -32,8 +34,8 @@ function App() {
         }
       />
       <Route path="/signUp" element={<SignUp />} />
-      <Route path="/token" element={<Token />} />
-      <Route path="/forgotPassword" element={<ForgotPassword />} />
+      <Route path="/ResetPassword" element={<Token />} />
+      <Route path="/forgotPassword/:token" element={<ForgotPassword />} />
 
       <Route path="/layout" element={<Layout />}>
         <Route index element={<Dashboard />} />
@@ -41,12 +43,20 @@ function App() {
         <Route path="createUser" element={<CreateUser />} />
         <Route path="createAdmin" element={<CreateAdmin />} />
         <Route path="documentOwners" element={<DocumentOwners />} />
-        <Route path="documentOwners/:docOwner" element={<UserDocument />} />
+        <Route path="auditTrail" element={<AuditTrail />} />
+        <Route
+          path="documentOwners/:create_by/:email"
+          element={<UserDocument />}
+        />
         <Route path="uploadDocument" element={<UploadDocument />} />
         <Route path="departments" element={<Departments />} />
         <Route path="departments/:departmentId" element={<UnitList />} />
         <Route path="documents" element={<Documents />} />
         <Route path="documents/:documentId" element={<DocumentType />} />
+        <Route
+          path="documents/:documentId/:docName"
+          element={<DocumentTrail />}
+        />
         <Route path="profile" element={<Profile />} />
       </Route>
 

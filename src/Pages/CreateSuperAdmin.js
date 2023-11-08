@@ -25,29 +25,9 @@ const CreateSuperAdmin = () => {
   //   const [dept, setDept] = useState([])
   const [showPassword, setShowPassword] = useState(false)
 
-  //   useEffect(() => {
-  //     const config = {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //         'x-api-key': 987654,
-  //       },
-  //     }
-  //     axios
-  //       .get(
-  //         'https://connectapi.mosquepay.org/cmd_system_api/v1/api/department',
-  //         config
-  //       )
-  //       .then((res) => {
-  //         setDept(res.data.result)
-  //       })
-  //       .catch((err) => console.log(err))
-  //   }, [])
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword)
   }
-  console.log(email, create_by, firstname, lastname, role)
-  console.log(create_by)
 
   const adminValue = useFormik({
     initialValues: {

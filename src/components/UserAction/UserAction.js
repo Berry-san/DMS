@@ -3,8 +3,8 @@ import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import Audit from '../Audit/Audit'
 
-const ShareButton = ({ document_name, icon }) => {
-  const { email, ref_id } = useSelector((state) => state.user.user)
+const UserAction = ({ document_name, icon, openDeleteModal }) => {
+  const { email, ref_id, role } = useSelector((state) => state.user.user)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const dropdownRef = useRef(null)
@@ -135,6 +135,21 @@ const ShareButton = ({ document_name, icon }) => {
             >
               WhatsApp
             </button>
+            {role !== '3' ? (
+              //   <span
+              //     className="cursor-pointer"
+              //     onClick={() => openDeleteModal(owner)}
+              //   >
+              //     <img src={trash} alt="" />
+              //   </span>
+              <button
+                onClick={openDeleteModal}
+                className="px-4 py-2 text-sm text-rose-700 hover:bg-gray-100 hover:text-gray-900"
+                role="menuitem"
+              >
+                Delete
+              </button>
+            ) : null}
           </div>
         </div>
       )}
@@ -142,4 +157,4 @@ const ShareButton = ({ document_name, icon }) => {
   )
 }
 
-export default ShareButton
+export default UserAction

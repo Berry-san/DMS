@@ -1,17 +1,26 @@
 import forward from '../assets/svgs/forward.svg'
 import trash from '../assets/svgs/trash.svg'
 import back from '../assets/svgs/back.svg'
+import audit from '../assets/svgs/audit.svg'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import Pagination from '../components/Pagination/Pagination'
 import axios from 'axios'
+import qs from 'qs'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { API_BASE } from '../middleware/API_BASE'
 import ShareButton from '../components/ShareButton/ShareButton'
 import Modal from '../components/Modal/Modal'
+import { Link } from 'react-router-dom'
+import Audit from '../components/Audit/Audit'
 
 const DocumentType = () => {
+  const { email, ref_id, role } = useSelector((state) => state.user.user)
   const { documentId } = useParams()
-  const decodedID = String(atob(documentId), 10)
+  const decoded = atob(documentId)
+  const decodedID = decodeURIComponent(decoded)
 
   const navigate = useNavigate()
   const goBack = () => {
@@ -19,6 +28,7 @@ const DocumentType = () => {
   }
 
   const [search, setSearch] = useState('')
+  const [loading, setLoading] = useState(false)
   const [sortedData, setSortedData] = useState([])
   const [sortOrder, setSortOrder] = useState('asc')
   const [filteredData, setFilteredData] = useState([])
@@ -91,8 +101,9 @@ const DocumentType = () => {
     setSortOrder(newSortOrder)
   }
 
-  const openDeleteModal = (docID) => {
-    setFileToDelete(docID)
+  const openDeleteModal = (doc) => {
+    setFileToDelete(doc)
+    // console.log(doc.document_id)
     setShowModal(true)
   }
 
@@ -101,14 +112,63 @@ const DocumentType = () => {
     setFileToDelete(null)
   }
 
-  const handleDelete = (docID) => {
-    // Make the API call to delete the file with docID
-    // After successful deletion, update the UI to reflect the deletion
-    const updatedData = filteredData.filter((doc) => doc.id !== docID)
-    setFilteredData(updatedData)
+  const logAuditTrail = (action, url, email) => {
+    // Create an audit trail entry
+    const auditTrailEntry = {
+      inserted_dt: new Date().toISOString(), // Current date and time
+      ref_id,
+      action,
+      document_name: fileToDelete.image,
+      email,
+      url,
+    }
 
-    // Close the modal after deletion
-    closeDeleteModal()
+    // Log the audit trail entry
+    Audit.logAuditTrail(auditTrailEntry)
+  }
+
+  const handleDelete = async (file) => {
+    console.log(file)
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'x-api-key': 987654,
+      },
+    }
+    try {
+      setLoading(true)
+      // const response = await axios.post(
+      //   API_BASE + 'deleteImage',
+      //   qs.stringify(file.image),
+      //   config
+      // )
+      const dataToDelete = {
+        image: file.image,
+      }
+
+      const response = await axios.post(
+        API_BASE + 'deleteImage',
+        qs.stringify(dataToDelete), // Serialize the data object
+        config
+      )
+
+      console.log(response)
+      if (response.status === 200) {
+        // After successful deletion, update the UI to reflect the deletion
+        const updatedData = filteredData.filter((doc) => doc.id !== file.id)
+        setFilteredData(updatedData)
+        const link = `https://connectapi.mosquepay.org/cmd_system_api/assets/img/useraccount/${file.image}`
+        logAuditTrail('Deleted Document', link, email)
+        // Close the modal after deletion
+        closeDeleteModal()
+        toast.success(response.data.message)
+      } else {
+        toast.error(response.data.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error)
+    }
   }
 
   return (
@@ -139,107 +199,126 @@ const DocumentType = () => {
           </div>
         </div>
       </div>
-      <div className="">
-        <div className="border rounded border-border_color">
-          <table className="w-full table-auto">
-            <thead className="text-sm font-bold bg-green">
-              <tr className="text-left bg-green">
-                <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4 xl:pl-11">
-                  Owner
-                </th>
+      {filteredData.length > 0 ? (
+        <div>
+          <div className="border rounded border-border_color">
+            <table className="w-full table-auto">
+              <thead className="text-sm font-bold bg-green">
+                <tr className="text-left bg-green">
+                  <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4 xl:pl-11">
+                    Owner
+                  </th>
 
-                <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
-                  Document Name
-                </th>
+                  <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
+                    Document Name
+                  </th>
 
-                <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
-                  Purpose
-                </th>
-                <th
-                  className="px-2 py-2 font-medium text-black cursor-pointer md:py-4 md:px-4"
-                  onClick={handleSortByDate}
-                >
-                  Date {sortOrder === 'asc' ? ' ▲' : ' ▼'}
-                </th>
-                <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-sm font-medium leading-5">
-              {currentUsers?.map((owner) => {
-                const link = `https://connectapi.mosquepay.org/cmd_system_api/assets/img/useraccount/${owner.image}`
-                return (
-                  <tr key={owner.id}>
-                    <td className="p-4 border-b border-border_color xl:pl-11">
-                      <p className="font-medium text-black">
-                        {owner.document_owner}
-                      </p>
-                    </td>
-                    <td className="p-4 border-b border-border_color dark:border-strokedark">
-                      <p className="text-black truncate max-w-[10rem]">
-                        {owner.image}
-                      </p>
-                    </td>
-                    <td className="p-4 border-b border-border_color dark:border-strokedark">
-                      <p className="text-black truncate max-w-[10rem]">
-                        {owner.purpose}
-                      </p>
-                    </td>
-                    <td className="p-4 border-b border-border_color dark:border-strokedark">
-                      <p className="text-black">{owner.uploaded_dt}</p>
-                    </td>
-                    <td className="z-30 flex items-center p-4 space-x-4 border-b border-border_color dark:border-strokedark">
-                      <ShareButton
-                        link={link}
-                        icon={forward}
-                        // handleDelete={}
-                      />
-                      <span
-                        className="cursor-pointer"
-                        onClick={() => openDeleteModal(owner.id)}
-                      >
-                        <img src={trash} alt="" />
-                      </span>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="flex items-center justify-end">
-          <Pagination
-            currentPage={currentPage}
-            onPageChange={paginate}
-            totalCount={filteredData.length}
-            pageSize={usersPerPage}
-            siblingCount={1}
-            className="my-3"
-          />
-        </div>
-
-        <Modal isVisible={showModal} onClose={closeDeleteModal}>
-          <h2 className="mb-5 font-semibold text-center">
-            Are you sure you want to delete this file?
-          </h2>
-          <div className="flex justify-center space-x-2">
-            <button
-              className="px-4 py-2 text-white rounded bg-rose-600"
-              onClick={() => handleDelete(fileToDelete)}
-            >
-              Yes
-            </button>
-            <button
-              className="px-4 py-2 text-white bg-blue-600 rounded"
-              onClick={closeDeleteModal}
-            >
-              No
-            </button>
+                  <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
+                    Purpose
+                  </th>
+                  <th
+                    className="px-2 py-2 font-medium text-black cursor-pointer md:py-4 md:px-4"
+                    onClick={handleSortByDate}
+                  >
+                    Date {sortOrder === 'asc' ? ' ▲' : ' ▼'}
+                  </th>
+                  <th className="px-2 py-2 font-medium text-black md:py-4 md:px-4">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="text-sm font-medium leading-5">
+                {currentUsers?.map((owner) => {
+                  const encodedValue = btoa(owner.image.toString())
+                  return (
+                    <tr key={owner.id}>
+                      <td className="p-4 border-b border-border_color xl:pl-11">
+                        <p className="font-medium text-black">
+                          {owner.document_owner}
+                        </p>
+                      </td>
+                      <td className="p-4 border-b border-border_color dark:border-strokedark">
+                        <p className="text-black truncate max-w-[10rem]">
+                          {owner.image}
+                        </p>
+                      </td>
+                      <td className="p-4 border-b border-border_color dark:border-strokedark">
+                        <p className="text-black truncate max-w-[10rem]">
+                          {owner.purpose}
+                        </p>
+                      </td>
+                      <td className="p-4 border-b border-border_color dark:border-strokedark">
+                        <p className="text-black">{owner.uploaded_dt}</p>
+                      </td>
+                      <td className="z-30 flex items-center p-4 space-x-4 border-b border-border_color dark:border-strokedark">
+                        <ShareButton
+                          document_name={owner.image}
+                          icon={forward}
+                          // handleDelete={}
+                        />
+                        {role === '1' || '4 ' ? (
+                          <Link
+                            to={`/layout/documents/${documentId}/${encodedValue}`}
+                          >
+                            <img src={audit} alt="" />
+                          </Link>
+                        ) : null}
+                        {/* <Link to={'/layout/document/audit'}>Hello</Link> */}
+                        {role !== '3' ? (
+                          <span
+                            className="cursor-pointer"
+                            onClick={() => openDeleteModal(owner)}
+                          >
+                            <img src={trash} alt="" />
+                          </span>
+                        ) : null}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
           </div>
-        </Modal>
-      </div>
+
+          <div className="flex items-center justify-end">
+            <Pagination
+              currentPage={currentPage}
+              onPageChange={paginate}
+              totalCount={filteredData.length}
+              pageSize={usersPerPage}
+              siblingCount={1}
+              className="my-3"
+            />
+          </div>
+
+          <Modal isVisible={showModal} onClose={closeDeleteModal}>
+            <h2 className="mb-5 font-semibold text-center">
+              Are you sure you want to delete this file?
+            </h2>
+            <div className="flex justify-center space-x-2">
+              <button
+                className="px-4 py-2 text-white rounded bg-rose-600"
+                onClick={() => handleDelete(fileToDelete)}
+                disabled={loading}
+              >
+                Yes
+              </button>
+              <button
+                className="px-4 py-2 text-white bg-blue-600 rounded"
+                onClick={closeDeleteModal}
+              >
+                No
+              </button>
+            </div>
+          </Modal>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center mt-40 sm:mt-60">
+          <span className="font-semibold text-lg sm:text-[30px]">
+            No Documents Available
+          </span>
+        </div>
+      )}
     </>
   )
 }

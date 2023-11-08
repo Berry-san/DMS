@@ -19,16 +19,17 @@ const Profile = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const { firstname, lastname, email, phonenumber, department, unit } =
+  const { firstname, lastname, role, email, phonenumber, department, unit } =
     useSelector((state) => state.user.user)
 
   const passwordValue = useFormik({
     initialValues: {
-      password: '',
+      oldPassword: '',
+      newPassword: '',
       confirmPassword: '',
     },
     validationSchema: Yup.object().shape({
-      password: Yup.string()
+      newPassword: Yup.string()
         .min(8, 'Password must be 8 characters long')
         .matches(/[0-9]/, 'Password requires a number')
         .matches(/[a-z]/, 'Password requires a lowercase letter')
@@ -36,7 +37,7 @@ const Profile = () => {
         .matches(/[^\w]/, 'Password requires a symbol')
         .required('Password is required'),
       confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
         .required('Confirm Password is required'),
     }),
     onSubmit: async () => {
@@ -50,23 +51,37 @@ const Profile = () => {
         },
       }
 
+      // console.log(passwordValue.values)
+      console.log({
+        old_passwnew: passwordValue.values.oldPassword,
+        new_password: passwordValue.values.newPassword,
+        email,
+        user_type_id: role,
+      })
+
       try {
         const response = await axios.post(
-          API_BASE + 'user_login',
-          qs.stringify(passwordValue.values),
+          API_BASE + 'update_pass',
+          qs.stringify({
+            old_password: passwordValue.values.oldPassword,
+            new_password: passwordValue.values.newPassword,
+            email,
+            user_type_id: role,
+          }),
           config
         )
+        console.log(response)
         if (response.data['status_code'] === '0') {
           toast.success(response.data.message)
         } else {
           toast.error(response.data.message)
         }
         setLoading(false)
-      } catch (error) {
-        toast.error(error.message)
-        console.log(error)
+      } catch (err) {
+        toast.error(err.message)
         setError(error)
         setLoading(false)
+        console.log(error)
       }
     },
   })
@@ -166,27 +181,47 @@ const Profile = () => {
                 <div className="grid grid-cols-1 text-left md:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-5">
                   <div className="flex flex-col">
                     <label htmlFor="" className="text-sm font-semibold">
-                      Password:
+                      Current Password:
                     </label>
                     <input
                       type="password"
-                      name="password"
-                      value={passwordValue.values.password}
+                      name="oldPassword"
+                      value={passwordValue.values.oldPassword}
                       onChange={passwordValue.handleChange}
                       onBlur={passwordValue.handleBlur}
-                      placeholder="Password"
+                      placeholder="Enter Current Password"
                       className="bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
                     />
-                    {passwordValue.touched.password &&
-                    passwordValue.errors.password ? (
+                    {passwordValue.touched.oldPassword &&
+                    passwordValue.errors.oldPassword ? (
                       <p className="mt-1 text-xs font-medium text-red-500">
-                        {passwordValue.errors.password}
+                        {passwordValue.errors.oldPassword}
                       </p>
                     ) : null}
                   </div>
                   <div className="flex flex-col">
                     <label htmlFor="" className="text-sm font-semibold">
-                      Confirm Password:
+                      New Password:
+                    </label>
+                    <input
+                      type="password"
+                      name="newPassword"
+                      value={passwordValue.values.newPassword}
+                      onChange={passwordValue.handleChange}
+                      onBlur={passwordValue.handleBlur}
+                      placeholder="Enter New Password"
+                      className="bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
+                    />
+                    {passwordValue.touched.newPassword &&
+                    passwordValue.errors.newPassword ? (
+                      <p className="mt-1 text-xs font-medium text-red-500">
+                        {passwordValue.errors.newPassword}
+                      </p>
+                    ) : null}
+                  </div>
+                  <div className="flex flex-col">
+                    <label htmlFor="" className="text-sm font-semibold">
+                      Confirm New Password:
                     </label>
                     <input
                       type="password"
@@ -194,7 +229,7 @@ const Profile = () => {
                       value={passwordValue.values.confirmPassword}
                       onChange={passwordValue.handleChange}
                       onBlur={passwordValue.handleBlur}
-                      placeholder="Confirm Password"
+                      placeholder="Confirm New Password"
                       className="bg-[#f4f4f4] px-5 py-3 focus:outline-none rounded-md"
                     />
                     {passwordValue.touched.confirmPassword &&
