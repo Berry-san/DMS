@@ -14,12 +14,13 @@ import UnitList from './Pages/Units'
 import Documents from './Pages/Documents'
 import DocumentType from './Pages/DocumentType'
 import Profile from './Pages/Profile'
-import Token from './Pages/Auth/Token'
+import ResetPassword from './Pages/Auth/ResetPassword'
 import ForgotPassword from './Pages/Auth/forgotPassword'
 import AuditTrail from './Pages/AuditTrail'
 import { Route, Navigate, Routes } from 'react-router'
 import { useSelector } from 'react-redux'
 import DocumentTrail from './Pages/DocumentTrail'
+import Test from './Pages/TestPage'
 
 function App() {
   const { isAuthenticated } = useSelector((state) => state.user.user)
@@ -34,7 +35,7 @@ function App() {
         }
       />
       <Route path="/signUp" element={<SignUp />} />
-      <Route path="/ResetPassword" element={<Token />} />
+      <Route path="/ResetPassword" element={<ResetPassword />} />
       <Route path="/forgotPassword/:token" element={<ForgotPassword />} />
 
       <Route path="/layout" element={<Layout />}>

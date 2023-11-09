@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import ClipLoader from 'react-spinners/ClipLoader'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-const Token = () => {
+const ResetPassword = () => {
   const navigate = useNavigate()
 
   const [loading, setLoading] = useState(false)
@@ -149,4 +149,4 @@ const Token = () => {
   )
 }
 
-export default Token
+export default ResetPassword
