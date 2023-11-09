@@ -20,7 +20,6 @@ import AuditTrail from './Pages/AuditTrail'
 import { Route, Navigate, Routes } from 'react-router'
 import { useSelector } from 'react-redux'
 import DocumentTrail from './Pages/DocumentTrail'
-import Test from './Pages/TestPage'
 
 function App() {
   const { isAuthenticated } = useSelector((state) => state.user.user)
