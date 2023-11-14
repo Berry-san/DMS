@@ -1,4 +1,5 @@
 import forward from '../assets/svgs/forward.svg'
+import ellipsis from '../assets/svgs/ellipsis.svg'
 import trash from '../assets/svgs/trash.svg'
 import back from '../assets/svgs/back.svg'
 import audit from '../assets/svgs/audit.svg'
@@ -13,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { API_BASE } from '../middleware/API_BASE'
 import ShareButton from '../components/ShareButton/ShareButton'
 import Modal from '../components/Modal/Modal'
+import UserAction from '../components/UserAction/UserAction'
 import { Link } from 'react-router-dom'
 import Audit from '../components/Audit/Audit'
 
@@ -201,7 +203,7 @@ const DocumentType = () => {
       </div>
       {filteredData.length > 0 ? (
         <div>
-          <div className="border rounded border-border_color">
+          <div className="max-w-full overflow-x-auto bg-white border rounded-md border-stroke shadow-default">
             <table className="w-full table-auto">
               <thead className="text-sm font-bold bg-green">
                 <tr className="text-left bg-green">
@@ -231,47 +233,60 @@ const DocumentType = () => {
                 {currentUsers?.map((owner) => {
                   const encodedValue = btoa(owner.image.toString())
                   return (
-                    <tr key={owner.id}>
+                    <tr key={owner.id} className="border-b border-border_color">
                       <td className="p-4 border-b border-border_color xl:pl-11">
                         <p className="font-medium text-black">
                           {owner.document_owner}
                         </p>
                       </td>
-                      <td className="p-4 border-b border-border_color dark:border-strokedark">
-                        <p className="text-black truncate max-w-[10rem]">
-                          {owner.image}
-                        </p>
+                      <td className="p-4 ">
+                        <Link
+                          to={`/layout/documents/${documentId}/${encodedValue}`}
+                        >
+                          <p className="text-black truncate max-w-[10rem]">
+                            {owner.image}
+                          </p>
+                        </Link>
                       </td>
-                      <td className="p-4 border-b border-border_color dark:border-strokedark">
+                      <td className="p-4 ">
                         <p className="text-black truncate max-w-[10rem]">
                           {owner.purpose}
                         </p>
                       </td>
-                      <td className="p-4 border-b border-border_color dark:border-strokedark">
+                      <td className="p-4 ">
                         <p className="text-black">{owner.uploaded_dt}</p>
                       </td>
-                      <td className="z-30 flex items-center p-4 space-x-4 border-b border-border_color dark:border-strokedark">
-                        <ShareButton
-                          document_name={owner.image}
-                          icon={forward}
-                          // handleDelete={}
-                        />
-                        {role === '1' || '4 ' ? (
-                          <Link
-                            to={`/layout/documents/${documentId}/${encodedValue}`}
-                          >
-                            <img src={audit} alt="" />
-                          </Link>
-                        ) : null}
-                        {/* <Link to={'/layout/document/audit'}>Hello</Link> */}
-                        {role !== '3' ? (
-                          <span
-                            className="cursor-pointer"
-                            onClick={() => openDeleteModal(owner)}
-                          >
-                            <img src={trash} alt="" />
-                          </span>
-                        ) : null}
+                      <td className="">
+                        <div className="z-30 items-center hidden p-4 space-x-4 lg:flex">
+                          <ShareButton
+                            document_name={owner.image}
+                            icon={forward}
+                            // handleDelete={}
+                          />
+                          {role === '1' || '4 ' ? (
+                            <Link
+                              to={`/layout/documents/${documentId}/${encodedValue}`}
+                            >
+                              <img src={audit} alt="" />
+                            </Link>
+                          ) : null}
+                          {/* <Link to={'/layout/document/audit'}>Hello</Link> */}
+                          {role !== '3' ? (
+                            <span
+                              className="cursor-pointer"
+                              onClick={() => openDeleteModal(owner)}
+                            >
+                              <img src={trash} alt="" />
+                            </span>
+                          ) : null}
+                        </div>
+                        <div className="flex items-center justify-center text-xl lg:hidden">
+                          <UserAction
+                            document_name={owner.image}
+                            icon={ellipsis}
+                            openDeleteModal={() => openDeleteModal(owner)}
+                          />
+                        </div>
                       </td>
                     </tr>
                   )

@@ -167,7 +167,7 @@ const UserDocument = () => {
               >
                 <div className="absolute top-0 right-0">
                   <UserAction
-                    link={link}
+                    document_name={doc.image}
                     icon={ellipsis}
                     openDeleteModal={() => openDeleteModal(doc)}
                   />
@@ -200,7 +200,7 @@ const UserDocument = () => {
             Yes
           </button>
           <button
-            className="px-4 py-2 text-white cursor-pointer bg-blue-600 rounded"
+            className="px-4 py-2 text-white bg-blue-600 rounded cursor-pointer"
             onClick={closeDeleteModal}
           >
             No

@@ -73,8 +73,8 @@ const UserAction = ({ document_name, icon, openDeleteModal }) => {
     const gmailURL = `https://mail.google.com/mail/u/0/?view=cm&fs=1&to&su=Shared%20Link&body=${encodeURIComponent(
       link
     )}`
-    window.open(gmailURL, '_blank')
     toast.success('Forwarded to email!')
+    window.open(gmailURL, '_blank')
     logAuditTrail('Shared Document via mail', link, email)
     closeDropdown()
   }
@@ -83,8 +83,8 @@ const UserAction = ({ document_name, icon, openDeleteModal }) => {
     const whatsappURL = `https://api.whatsapp.com/send?text=${encodeURIComponent(
       link
     )}`
-    window.open(whatsappURL, '_blank')
     toast.success('Forwarded to WhatsApp!')
+    window.open(whatsappURL, '_blank')
     logAuditTrail('Shared Document via Whatsapp', link, email)
     closeDropdown()
   }
@@ -94,7 +94,7 @@ const UserAction = ({ document_name, icon, openDeleteModal }) => {
   }
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="inline-block text-left">
       <button
         onClick={toggleDropdown}
         className="inline-flex items-center justify-center p-2"

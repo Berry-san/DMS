@@ -145,7 +145,7 @@ const CreateUser = () => {
       </div>
       <form onSubmit={userValue.handleSubmit} autoComplete="off">
         <div className="grid grid-cols-1 text-left md:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-5">
-          <div>
+          <div className="col-span-3 md:col-span-2 xl:col-span-1">
             <label htmlFor="" className="text-xs font-semibold">
               First Name:
             </label>
@@ -164,7 +164,7 @@ const CreateUser = () => {
               </p>
             ) : null}
           </div>
-          <div>
+          <div className="col-span-3 md:col-span-2 xl:col-span-1">
             <label htmlFor="" className="text-xs font-semibold">
               Last Name:
             </label>
@@ -183,7 +183,7 @@ const CreateUser = () => {
               </p>
             ) : null}
           </div>
-          <div>
+          <div className="col-span-3 md:col-span-2 xl:col-span-1">
             <label htmlFor="" className="text-xs font-semibold">
               Phone Number:
             </label>
@@ -202,7 +202,7 @@ const CreateUser = () => {
               </p>
             ) : null}
           </div>
-          <div>
+          <div className="col-span-3 md:col-span-2 xl:col-span-1">
             <label htmlFor="" className="text-xs font-semibold">
               Email Address:
             </label>
@@ -221,7 +221,7 @@ const CreateUser = () => {
               </p>
             ) : null}
           </div>
-          <div className="col-span-2 md:col-span-1">
+          <div className="col-span-3 md:col-span-2 xl:col-span-1">
             <label htmlFor="" className="text-xs font-semibold">
               Department
             </label>
@@ -243,7 +243,7 @@ const CreateUser = () => {
               ))}
             </select>
           </div>
-          <div className="col-span-2 md:col-span-1">
+          <div className="col-span-3 md:col-span-2 xl:col-span-1">
             <label htmlFor="" className="text-xs font-semibold">
               Unit
             </label>
@@ -267,7 +267,7 @@ const CreateUser = () => {
               })}
             </select>
           </div>
-          <div>
+          <div className="col-span-3 md:col-span-2 xl:col-span-1">
             <label htmlFor="" className="text-xs font-semibold">
               Password:
             </label>

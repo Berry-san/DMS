@@ -54,11 +54,14 @@ const AuditTrail = () => {
   const handleSearchChange = (e) => {
     const searchValue = e.target.value.toLowerCase()
     setSearch(searchValue)
+
+    // Filter from the original data (sortedData) for search
     const filtered = sortedData.filter(
       (item) =>
-        item.firstName.toLowerCase().includes(searchValue) ||
-        item.document_owner.toLowerCase().includes(searchValue)
+        item.document_name.toLowerCase().includes(searchValue) ||
+        item.email.toLowerCase().includes(searchValue)
     )
+
     setFilteredData(filtered)
   }
 
@@ -107,7 +110,7 @@ const AuditTrail = () => {
         </div>
       </div>
       <div className="">
-        <div className="border rounded border-border_color">
+        <div className="max-w-full overflow-x-auto bg-white border rounded-md border-stroke shadow-default">
           <table className="w-full table-auto">
             <thead className="text-sm font-bold bg-green">
               <tr className="text-left bg-green">

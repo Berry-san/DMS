@@ -130,8 +130,8 @@ const DocumentOwners = () => {
                   const encodedValue1 = btoa(owner.create_by.toString())
                   const encodedValue2 = btoa(owner.email.toString())
                   return (
-                    <tr key={owner.id}>
-                      <td className="p-4 border-b border-border_color xl:pl-11">
+                    <tr key={owner.id} className="border-b border-border_color">
+                      <td className="p-4 xl:pl-11">
                         <Link
                           to={`/layout/documentOwners/${encodedValue1}/${encodedValue2}`}
                         >
@@ -140,13 +140,13 @@ const DocumentOwners = () => {
                           </p>
                         </Link>
                       </td>
-                      <td className="p-4 border-b border-border_color dark:border-strokedark">
+                      <td className="p-4 dark:border-strokedark">
                         <p className="text-center ">{owner.txn_count}</p>
                       </td>
-                      <td className="p-4 border-b border-border_color dark:border-strokedark">
+                      <td className="p-4 dark:border-strokedark">
                         <p className="text-black">{owner.department}</p>
                       </td>
-                      <td className="p-4 border-b border-border_color dark:border-strokedark">
+                      <td className="p-4 dark:border-strokedark">
                         <p className="text-black">{owner.email}</p>
                       </td>
                     </tr>

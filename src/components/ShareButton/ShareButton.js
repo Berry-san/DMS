@@ -94,10 +94,10 @@ const ShareButton = ({ document_name, icon }) => {
   }
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="inline-block text-left">
       <button
         onClick={toggleDropdown}
-        className="inline-flex items-center justify-center p-2"
+        className="inline-flex items-center justify-center"
         id="options-menu"
         aria-haspopup="true"
         aria-expanded="true"
@@ -107,7 +107,7 @@ const ShareButton = ({ document_name, icon }) => {
       </button>
 
       {isDropdownOpen && (
-        <div className="absolute right-0 z-20 w-40 mt-2 bg-white rounded-md shadow-lg">
+        <div className="absolute z-20 w-40 mt-2 bg-white rounded-md shadow-lg">
           <div
             className="flex flex-col py-1 font-semibold"
             role="menu"
